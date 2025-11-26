@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>藏王滑雪旅遊小工具</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="description" content="藏王滑雪 & 溫泉旅遊行程小工具，為自駕與滑雪客設計的手機行程助手。" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <div class="app-title">
+        <h1>藏王滑雪 · 行程助手</h1>
+        <p class="subtitle">把雪怪、纜車、溫泉都塞進你的口袋裡</p>
+      </div>
+      <div id="today-weather" class="today-weather"></div>
+    </header>
+
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="schedule">行程</button>
+      <button class="tab-btn" data-tab="info">旅遊資訊</button>
+      <button class="tab-btn" data-tab="budget">記帳</button>
+    </nav>
+
+    <main class="tab-container">
+      <!-- 行程分頁 -->
+      <section id="tab-schedule" class="tab-panel active">
+        <div id="itinerary-list"></div>
+      </section>
+
+      <!-- 航班 / 住宿 / 緊急聯絡 / 纜車地圖 -->
+      <section id="tab-info" class="tab-panel">
+        <section class="info-section">
+          <h2>航班資訊</h2>
+          <div id="flight-info" class="info-card"></div>
+        </section>
+
+        <section class="info-section">
+          <h2>住宿資訊</h2>
+          <div id="hotel-info" class="info-card"></div>
+        </section>
+
+        <section class="info-section">
+          <h2>緊急聯絡</h2>
+          <div id="emergency-info" class="info-card"></div>
+        </section>
+
+        <section class="info-section">
+          <h2>滑雪場纜車地圖</h2>
+          <div class="map-card">
+            <img
+              src="assets/zao-lift-map.png"
+              alt="藏王溫泉滑雪場纜車與雪道地圖"
+              class="lift-map"
+            />
+            <p class="hint">
+              建議事先把地圖下載到手機相簿，遇到訊號不好時也能離線查看。
+            </p>
+          </div>
+        </section>
+      </section>
+
+      <!-- 記帳分頁 -->
+      <section id="tab-budget" class="tab-panel">
+        <section class="info-section">
+          <h2>旅費記帳</h2>
+          <form id="expense-form" class="expense-form">
+            <div class="form-row">
+              <label>日期</label>
+              <input type="date" id="expense-date" required />
+            </div>
+            <div class="form-row">
+              <label>類別</label>
+              <select id="expense-category">
+                <option value="交通">交通</option>
+                <option value="住宿">住宿</option>
+                <option value="餐飲">餐飲</option>
+                <option value="滑雪">滑雪</option>
+                <option value="伴手禮">伴手禮</option>
+                <option value="其他">其他</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>說明</label>
+              <input type="text" id="expense-note" placeholder="例如：纜車券 / 晚餐燒肉" />
+            </div>
+            <div class="form-row">
+              <label>金額 (¥)</label>
+              <input type="number" id="expense-amount" min="0" step="1" required />
+            </div>
+            <button type="submit" class="primary-btn">新增記帳</button>
+          </form>
+
+          <div class="expense-summary">
+            <h3>總計</h3>
+            <p id="expense-total">¥0</p>
+          </div>
+
+          <div class="expense-list-wrapper">
+            <h3>記帳明細</h3>
+            <ul id="expense-list" class="expense-list"></ul>
+          </div>
+
+          <p class="hint">
+            ※ 目前使用 <strong>離線 localStorage</strong> 儲存。之後要改 Firebase 再來調整 <code>app.js</code>。
+          </p>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js');
+      });
+    }
+  </script>
+</body>
+</html>
