@@ -2,13 +2,16 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>藏王滑雪旅遊小工具</title>
+  <title>藏王滑雪 · 行程助手</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <meta name="theme-color" content="#111827" />
-  <meta name="description" content="藏王滑雪 & 溫泉旅遊行程小工具，為自駕與滑雪客設計的手機行程助手。" />
+  <meta
+    name="description"
+    content="藏王滑雪與藏王溫泉行程小工具，包含每日行程、雪票資訊、租雪具、溫泉小抄、包車與記帳功能，為自駕與滑雪旅設計。"
+  />
 
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -17,7 +20,7 @@
     <header class="app-header">
       <div class="app-title">
         <h1>藏王滑雪 · 行程助手</h1>
-        <p class="subtitle">把雪怪、纜車、溫泉都塞進你的口袋裡</p>
+        <p class="subtitle">把雪怪、纜車與溫泉都塞進你的口袋裡</p>
       </div>
       <div id="today-weather" class="today-weather"></div>
     </header>
@@ -34,7 +37,7 @@
         <div id="itinerary-list"></div>
       </section>
 
-      <!-- 航班 / 住宿 / 緊急聯絡 / 纜車地圖 -->
+      <!-- 航班 / 住宿 / 雪票 / 租雪具 / 溫泉 / 山小屋 / 包車 / 緊急聯絡 / 纜車地圖 -->
       <section id="tab-info" class="tab-panel">
         <section class="info-section">
           <h2>航班資訊</h2>
@@ -44,6 +47,31 @@
         <section class="info-section">
           <h2>住宿資訊</h2>
           <div id="hotel-info" class="info-card"></div>
+        </section>
+
+        <section class="info-section">
+          <h2>四日雪票（完美行）</h2>
+          <div id="pass-info" class="info-card"></div>
+        </section>
+
+        <section class="info-section">
+          <h2>雪具租借 · Rossignol Rental Station</h2>
+          <div id="rental-info" class="info-card"></div>
+        </section>
+
+        <section class="info-section">
+          <h2>藏王溫泉小抄</h2>
+          <div id="onsen-info" class="info-card"></div>
+        </section>
+
+        <section class="info-section">
+          <h2>三五郎小屋（Sangoro Hut）</h2>
+          <div id="hut-info" class="info-card"></div>
+        </section>
+
+        <section class="info-section">
+          <h2>包車資訊（機場 ⇄ 藏王溫泉）</h2>
+          <div id="charter-info" class="info-card"></div>
         </section>
 
         <section class="info-section">
@@ -60,7 +88,8 @@
               class="lift-map"
             />
             <p class="hint">
-              建議事先把地圖下載到手機相簿，遇到訊號不好時也能離線查看。
+              建議把官方雪道地圖截圖存成 <code>assets/zao-lift-map.png</code>，
+              並同步下載到手機相簿，遇到訊號不穩時也能離線查看。
             </p>
           </div>
         </section>
@@ -88,11 +117,21 @@
             </div>
             <div class="form-row">
               <label>說明</label>
-              <input type="text" id="expense-note" placeholder="例如：纜車券 / 晚餐燒肉" />
+              <input
+                type="text"
+                id="expense-note"
+                placeholder="例如：纜車券 / 晚餐燒肉"
+              />
             </div>
             <div class="form-row">
               <label>金額 (¥)</label>
-              <input type="number" id="expense-amount" min="0" step="1" required />
+              <input
+                type="number"
+                id="expense-amount"
+                min="0"
+                step="1"
+                required
+              />
             </div>
             <button type="submit" class="primary-btn">新增記帳</button>
           </form>
@@ -108,7 +147,8 @@
           </div>
 
           <p class="hint">
-            ※ 目前使用 <strong>離線 localStorage</strong> 儲存。之後要改 Firebase 再來調整 <code>app.js</code>。
+            ※ 目前使用 <strong>瀏覽器 localStorage</strong> 離線儲存。
+            之後若要改成 Firebase 同步版，再調整 <code>app.js</code>。
           </p>
         </section>
       </section>
@@ -117,9 +157,9 @@
 
   <script src="app.js"></script>
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js');
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js");
       });
     }
   </script>
