@@ -460,6 +460,7 @@
     .budget-form-row {
       display: flex;
       gap: 6px;
+      align-items: center;
     }
 
     .budget-form-row input,
@@ -497,6 +498,7 @@
       display: flex;
       flex-direction: column;
       gap: 2px;
+      max-width: 72%;
     }
 
     .budget-item-title {
@@ -519,6 +521,36 @@
       font-size: 14px;
     }
 
+    .budget-summary-line {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    .share-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    #budget-shares-container {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    #budget-shares-container-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
     button {
       font-family: inherit;
     }
@@ -536,7 +568,6 @@
     </div>
     <div id="today-banner" class="today-banner">
       <div class="today-banner-main">
-        <!-- 清楚標明：這裡是「中腹 1220m 概略預報」 -->
         <span>今天的藏王天氣 / 雪況（中腹 1220m 概略預報）</span>
         <span class="temp">載入中…</span>
       </div>
@@ -555,7 +586,7 @@
   <nav class="tab-nav">
     <button data-tab="schedule" class="active">行程</button>
     <button data-tab="info">旅遊小抄</button>
-    <button data-tab="budget">記帳</button>
+    <button data-tab="budget">記帳 / 分帳</button>
   </nav>
 
   <main>
@@ -786,11 +817,27 @@
       <div class="card">
         <div class="card-header">
           <div>
-            <div class="card-title">旅行記帳 / 預算紀錄</div>
-            <div class="card-subtitle">離線可用 · 本機儲存 · 簡單記下每一筆在雪上的花</div>
+            <div class="card-title">旅行記帳 / 分帳</div>
+            <div class="card-subtitle">離線可用 · 本機儲存 · 幫你算清楚誰付多少、誰該付多少</div>
           </div>
         </div>
         <div class="card-body">
+          <!-- 分帳成員設定 -->
+          <div class="subsection-title">
+            分帳成員設定
+            <span class="sub">用逗號分隔，例如：我, 旅伴</span>
+          </div>
+          <div class="budget-form-row" style="margin-bottom:4px;">
+            <input type="text" id="member-names" placeholder="我, 旅伴" />
+            <button type="button" class="btn btn-ghost" id="member-save-btn">
+              儲存成員
+            </button>
+          </div>
+          <div id="member-current" class="card-subtitle" style="margin:4px 0 10px;">
+            目前成員：尚未設定（預設會使用「我, 旅伴」）
+          </div>
+
+          <!-- 記帳表單 -->
           <form id="budget-form" class="budget-form">
             <div class="budget-form-row">
               <input type="text" id="budget-name" placeholder="項目，例如：Rossignol 租板、山形晚餐" />
@@ -806,6 +853,17 @@
                 <option value="購物 / 伴手禮">購物 / 伴手禮</option>
                 <option value="其他">其他</option>
               </select>
+            </div>
+            <div class="budget-form-row">
+              <select id="budget-payer">
+                <option value="">付款人（會依照上方成員更新）</option>
+              </select>
+            </div>
+            <div id="budget-shares-container">
+              <div>分帳對象：</div>
+              <div id="budget-shares-container-inner">
+                <!-- 依成員動態產生 checkbox -->
+              </div>
             </div>
             <button type="submit" class="btn btn-primary">
               <span class="icon">➕</span> 新增記帳

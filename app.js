@@ -337,7 +337,6 @@ async function loadWeatherAndSnow() {
 
     const d = data.daily;
 
-    // 今天（index 0）→ banner
     const todayMax = d.temperature_2m_max[0];
     const todayMin = d.temperature_2m_min[0];
     const todaySnow = d.snowfall_sum[0];
@@ -353,7 +352,6 @@ async function loadWeatherAndSnow() {
       todayWind
     )} km/h`;
 
-    // 下方卡片：未來三天「中腹 1220m 概略預報」
     const daysToShow = Math.min(3, d.time.length);
     let html = `<div class="snow-row"><strong>中腹 1220m · 3 日概略預報（Open-Meteo）</strong></div>`;
 
@@ -437,7 +435,6 @@ function renderSchedule() {
 
     dayCard.appendChild(header);
 
-    // 每個 item 一張子卡
     day.items.forEach((item) => {
       const sub = document.createElement("div");
       sub.className = "card";
@@ -597,10 +594,11 @@ function renderDay3CityGuide() {
 }
 
 // -----------------------------
-// 記帳功能（本機儲存）
+// 記帳 & 分帳功能（本機儲存）
 // -----------------------------
 
 const BUDGET_STORAGE_KEY = "zao_trip_budget_v1";
+const MEMBER_STORAGE_KEY = "zao_trip_members_v1";
 
 function loadBudgetFromStorage() {
   try {
@@ -622,7 +620,81 @@ function saveBudgetToStorage(items) {
   }
 }
 
+function loadMembersFromStorage() {
+  try {
+    const raw = localStorage.getItem(MEMBER_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed;
+  } catch {
+    return [];
+  }
+}
+
+function saveMembersToStorage(members) {
+  try {
+    localStorage.setItem(MEMBER_STORAGE_KEY, JSON.stringify(members));
+  } catch {
+    // ignore
+  }
+}
+
+let members = loadMembersFromStorage();
+if (!members || members.length === 0) {
+  members = ["我", "旅伴"];
+}
+
 let budgetItems = loadBudgetFromStorage();
+
+function renderMembersUI() {
+  const current = document.getElementById("member-current");
+  const payerSelect = document.getElementById("budget-payer");
+  const sharesContainerInner = document.getElementById(
+    "budget-shares-container-inner"
+  );
+
+  const namesStr = members.join("、");
+  if (current) {
+    current.textContent =
+      members.length > 0
+        ? `目前成員：${namesStr}`
+        : "目前成員：尚未設定（預設會使用「我, 旅伴」）";
+  }
+
+  if (payerSelect) {
+    payerSelect.innerHTML = "";
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.textContent = "付款人（會依照上方成員更新）";
+    payerSelect.appendChild(opt);
+
+    members.forEach((m) => {
+      const o = document.createElement("option");
+      o.value = m;
+      o.textContent = m;
+      payerSelect.appendChild(o);
+    });
+  }
+
+  if (sharesContainerInner) {
+    sharesContainerInner.innerHTML = "";
+    members.forEach((m) => {
+      const label = document.createElement("label");
+      label.className = "share-label";
+
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.value = m;
+      cb.checked = true;
+      cb.className = "share-checkbox";
+
+      label.appendChild(cb);
+      label.appendChild(document.createTextNode(m));
+      sharesContainerInner.appendChild(label);
+    });
+  }
+}
 
 function renderBudget() {
   const list = document.getElementById("budget-list");
@@ -630,6 +702,12 @@ function renderBudget() {
   list.innerHTML = "";
 
   let total = 0;
+
+  // 初始化成員統計
+  const memberTotals = {};
+  members.forEach((m) => {
+    memberTotals[m] = { paid: 0, shouldPay: 0 };
+  });
 
   budgetItems.forEach((item, idx) => {
     const li = document.createElement("li");
@@ -642,12 +720,42 @@ function renderBudget() {
     title.className = "budget-item-title";
     title.textContent = item.name || "(未命名)";
 
-    const meta = document.createElement("div");
-    meta.className = "budget-item-meta";
-    meta.textContent = `${item.category || "未分類"} ｜ ${item.amount}`;
+    const meta1 = document.createElement("div");
+    meta1.className = "budget-item-meta";
+
+    const amountNum =
+      typeof item.amount === "number"
+        ? item.amount
+        : parseFloat(item.amount) || 0;
+
+    meta1.textContent = `${item.category || "未分類"} ｜ ${amountNum.toLocaleString()}`;
+
+    // 付款人 / 分帳對象
+    const meta2 = document.createElement("div");
+    meta2.className = "budget-item-meta";
+
+    const shares =
+      Array.isArray(item.shares) && item.shares.length > 0
+        ? item.shares
+        : members.slice(); // 沒寫 shares 時，預設全員
+
+    const perShare =
+      shares.length > 0 ? amountNum / shares.length : amountNum;
+
+    let detailText = "";
+    if (item.payer) {
+      detailText += `付款人：${item.payer}｜`;
+    } else {
+      detailText += "付款人：未指定｜";
+    }
+    detailText += `分帳：${shares.join("、")}（每人約 ${Math.round(
+      perShare
+    ).toLocaleString()}）`;
+    meta2.textContent = detailText;
 
     main.appendChild(title);
-    main.appendChild(meta);
+    main.appendChild(meta1);
+    main.appendChild(meta2);
 
     const button = document.createElement("button");
     button.className = "btn btn-ghost";
@@ -663,11 +771,38 @@ function renderBudget() {
     li.appendChild(button);
     list.appendChild(li);
 
-    const num = parseFloat(item.amount);
-    if (!isNaN(num)) total += num;
+    total += amountNum;
+
+    // 更新成員統計
+    if (item.payer && memberTotals[item.payer]) {
+      memberTotals[item.payer].paid += amountNum;
+    }
+    shares.forEach((m) => {
+      if (memberTotals[m]) {
+        memberTotals[m].shouldPay += perShare;
+      }
+    });
   });
 
-  totalEl.innerHTML = `小計：<strong>${total.toLocaleString()}</strong>`;
+  // 組裝 summary
+  let summaryHtml = "";
+  members.forEach((m) => {
+    const t = memberTotals[m] || { paid: 0, shouldPay: 0 };
+    const paid = Math.round(t.paid);
+    const shouldPay = Math.round(t.shouldPay);
+    const diff = paid - shouldPay;
+    let status = "";
+    if (Math.abs(diff) < 1) {
+      status = "已平帳";
+    } else if (diff > 0) {
+      status = `應收 約 ${diff.toLocaleString()}`;
+    } else {
+      status = `應付 約 ${Math.abs(diff).toLocaleString()}`;
+    }
+    summaryHtml += `<div class="budget-summary-line">${m}：實際支付 ${paid.toLocaleString()} ｜ 應分攤 ${shouldPay.toLocaleString()} ｜ ${status}</div>`;
+  });
+
+  totalEl.innerHTML = `小計：<strong>${total.toLocaleString()}</strong>${summaryHtml}`;
 }
 
 // -----------------------------
@@ -702,8 +837,30 @@ document.addEventListener("DOMContentLoaded", () => {
   setupTabs();
   renderSchedule();
   renderDay3CityGuide();
+  renderMembersUI();
   renderBudget();
   loadWeatherAndSnow();
+
+  const memberSaveBtn = document.getElementById("member-save-btn");
+  if (memberSaveBtn) {
+    memberSaveBtn.addEventListener("click", () => {
+      const input = document.getElementById("member-names");
+      const raw = (input.value || "").trim();
+      const parts = raw
+        .split(",")
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
+
+      if (parts.length === 0) {
+        alert("請至少輸入一個成員名稱，例如：我, 旅伴");
+        return;
+      }
+      members = parts;
+      saveMembersToStorage(members);
+      renderMembersUI();
+      renderBudget(); // 成員改變，也重算一次 summary
+    });
+  }
 
   const form = document.getElementById("budget-form");
   form.addEventListener("submit", (e) => {
@@ -711,20 +868,43 @@ document.addEventListener("DOMContentLoaded", () => {
     const nameInput = document.getElementById("budget-name");
     const amountInput = document.getElementById("budget-amount");
     const categorySelect = document.getElementById("budget-category");
+    const payerSelect = document.getElementById("budget-payer");
 
     const name = nameInput.value.trim();
-    const amount = amountInput.value.trim();
+    const amountRaw = amountInput.value.trim();
     const category = categorySelect.value;
+    const payer = payerSelect.value || "";
 
-    if (!amount) {
+    if (!amountRaw) {
       alert("請至少輸入金額。");
+      return;
+    }
+
+    const amountNum = parseFloat(amountRaw);
+    if (isNaN(amountNum)) {
+      alert("金額格式不正確。");
+      return;
+    }
+
+    const shareCheckboxes = document.querySelectorAll(".share-checkbox");
+    const shares = [];
+    shareCheckboxes.forEach((cb) => {
+      if (cb.checked) {
+        shares.push(cb.value);
+      }
+    });
+
+    if (shares.length === 0 && members.length > 0) {
+      alert("請至少勾選一位分帳對象。");
       return;
     }
 
     budgetItems.push({
       name,
-      amount,
-      category
+      amount: amountNum,
+      category,
+      payer,
+      shares
     });
 
     saveBudgetToStorage(budgetItems);
