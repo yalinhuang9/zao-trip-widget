@@ -2,166 +2,796 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>藏王滑雪 · 行程助手</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>藏王滑雪旅遊小工具</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="theme-color" content="#0f172a" />
 
-  <link rel="manifest" href="manifest.webmanifest" />
+  <!-- PWA 基本設定（沿用你原本的 manifest / icon 即可） -->
+  <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
-  <meta name="theme-color" content="#111827" />
-  <meta
-    name="description"
-    content="藏王滑雪與藏王溫泉行程小工具，包含每日行程、雪票資訊、租雪具、溫泉小抄、包車與記帳功能，為自駕與滑雪旅設計。"
-  />
 
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #020617;
+      --card: #0b1220;
+      --card-soft: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.15);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --danger: #f97373;
+      --success: #4ade80;
+      --tag-must: #f97316;
+      --tag-buy: #facc15;
+      --tag-info: #22c55e;
+      --tag-book: #a855f7;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Noto Sans TC", sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #020617 40%, #020617 100%);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      padding: 14px 16px 10px;
+      background: linear-gradient(135deg, #020617, #020617);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid #111827;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-sub {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-soft {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      white-space: nowrap;
+    }
+
+    .today-banner {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 60%);
+      border: 1px solid rgba(15, 23, 42, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+    }
+
+    .today-banner-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .today-banner-main span.temp {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .today-banner-sub {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      color: #a5b4fc;
+      font-size: 11px;
+      flex-wrap: wrap;
+    }
+
+    .today-banner-link {
+      font-size: 11px;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .today-banner-link a {
+      color: #93c5fd;
+      text-decoration: none;
+    }
+
+    .today-banner-link a:hover {
+      text-decoration: underline;
+    }
+
+    nav.tab-nav {
+      display: flex;
+      margin: 4px 10px 0;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(31, 41, 55, 0.8);
+      position: sticky;
+      top: 78px;
+      z-index: 19;
+      backdrop-filter: blur(18px);
+    }
+
+    nav.tab-nav button {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 6px 4px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    nav.tab-nav button.active {
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.2), rgba(15, 23, 42, 0.9));
+      color: #e5e7eb;
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35), 0 8px 20px rgba(15, 23, 42, 0.9);
+    }
+
+    main {
+      padding: 10px 10px 20px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    section[data-tab-content] {
+      display: none;
+    }
+
+    section[data-tab-content].active {
+      display: block;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 12px 2px 6px;
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .section-title span.sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.9), #020617);
+      border-radius: var(--radius-lg);
+      padding: 12px 12px 10px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
+      margin-bottom: 10px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .card-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .card-tags {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      font-size: 10px;
+    }
+
+    .tag {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .tag.must {
+      border-color: rgba(249, 115, 22, 0.7);
+      color: #fed7aa;
+      background: rgba(249, 115, 22, 0.12);
+    }
+
+    .tag.buy {
+      border-color: rgba(250, 204, 21, 0.7);
+      color: #fef9c3;
+      background: rgba(250, 204, 21, 0.1);
+    }
+
+    .tag.info {
+      border-color: rgba(34, 197, 94, 0.6);
+      color: #bbf7d0;
+      background: rgba(22, 163, 74, 0.12);
+    }
+
+    .tag.book {
+      border-color: rgba(168, 85, 247, 0.9);
+      color: #e9d5ff;
+      background: rgba(126, 34, 206, 0.18);
+    }
+
+    .card-body {
+      margin-top: 6px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #e5e7eb;
+    }
+
+    .card-footer {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+      font-size: 12px;
+      padding: 6px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      border-color: rgba(56, 189, 248, 0.8);
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.22), rgba(15, 23, 42, 0.9));
+      color: #e0f2fe;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-style: dashed;
+      color: var(--text-muted);
+    }
+
+    .btn span.icon {
+      font-size: 14px;
+    }
+
+    .pill {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .pill strong {
+      color: #e5e7eb;
+    }
+
+    .info-card {
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.9), #020617);
+      border-radius: var(--radius-lg);
+      padding: 12px 12px 10px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
+      margin-bottom: 12px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .info-card h2 {
+      font-size: 14px;
+      margin: 0 0 6px;
+    }
+
+    .info-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .info-list {
+      margin: 4px 0 0;
+      padding-left: 18px;
+    }
+
+    .info-list li {
+      margin: 2px 0;
+    }
+
+    .external-link {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      padding: 4px 0;
+      font-size: 11px;
+      color: #93c5fd;
+      text-decoration: none;
+    }
+
+    .external-link span {
+      font-size: 12px;
+    }
+
+    .image-card img {
+      width: 100%;
+      border-radius: 12px;
+      display: block;
+      margin-top: 4px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 8px;
+    }
+
+    @media (max-width: 480px) {
+      .two-col {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* Day3 山形市區攻略 */
+    .subsection-title {
+      margin-top: 4px;
+      margin-bottom: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .mini-card {
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      padding: 8px;
+      margin-bottom: 6px;
+    }
+
+    .mini-card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .mini-card-title {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .mini-card-rating {
+      font-size: 11px;
+      color: #facc15;
+      white-space: nowrap;
+    }
+
+    .mini-card-body {
+      margin-top: 4px;
+      font-size: 11px;
+      color: #e5e7eb;
+    }
+
+    .mini-card-tags {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      font-size: 10px;
+    }
+
+    .mini-card-footer {
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* 雪況卡片 */
+    #snow-forecast {
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.14), rgba(15, 23, 42, 0.98));
+    }
+
+    #snow-forecast-content {
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    #snow-forecast-content .snow-row {
+      margin: 2px 0;
+    }
+
+    /* 記帳區 */
+    .budget-form {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .budget-form-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .budget-form-row input,
+    .budget-form-row select {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 12px;
+      padding: 6px 10px;
+    }
+
+    .budget-form-row input::placeholder {
+      color: #6b7280;
+    }
+
+    .budget-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 12px;
+    }
+
+    .budget-item {
+      padding: 6px 2px;
+      border-bottom: 1px dashed rgba(31, 41, 55, 0.9);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .budget-item-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .budget-item-title {
+      font-weight: 500;
+    }
+
+    .budget-item-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .budget-total {
+      margin-top: 8px;
+      font-size: 12px;
+      text-align: right;
+      color: #e5e7eb;
+    }
+
+    .budget-total strong {
+      font-size: 14px;
+    }
+
+    button {
+      font-family: inherit;
+    }
+  </style>
 </head>
 <body>
-  <div id="app">
-    <header class="app-header">
-      <div class="app-title">
-        <h1>藏王滑雪 · 行程助手</h1>
-        <p class="subtitle">把雪怪、纜車與溫泉都塞進你的口袋裡</p>
+  <header>
+    <div class="header-title">
+      <span>藏王滑雪旅遊小工具</span>
+      <span style="font-size:12px; opacity:.8;">@mojicha.home</span>
+    </div>
+    <div class="header-sub">
+      <span>滑 2・休 1・滑 2｜蔵王溫泉 × 山形市</span>
+      <span class="badge-soft">吉田屋連泊 · 包車往返機場 · 完美行雪票</span>
+    </div>
+    <div id="today-banner" class="today-banner">
+      <div class="today-banner-main">
+        <span>今天的藏王天氣 / 雪況</span>
+        <span class="temp">載入中…</span>
       </div>
-      <div id="today-weather" class="today-weather"></div>
-    </header>
+      <div class="today-banner-sub">
+        <span id="today-banner-snow">新雪：-- cm</span>
+        <span id="today-banner-note">體感：--°C｜風速：-- km/h</span>
+      </div>
+      <div class="today-banner-link">
+        <a href="https://www.snow-forecast.com/resorts/Yamagata-Zao-Onsen/6day/mid" target="_blank" rel="noopener">
+          打開 Snow-Forecast 看完整預報 →
+        </a>
+      </div>
+    </div>
+  </header>
 
-    <nav class="tab-nav">
-      <button class="tab-btn active" data-tab="schedule">行程</button>
-      <button class="tab-btn" data-tab="info">旅遊資訊</button>
-      <button class="tab-btn" data-tab="budget">記帳</button>
-    </nav>
+  <nav class="tab-nav">
+    <button data-tab="schedule" class="active">行程</button>
+    <button data-tab="info">旅遊小抄</button>
+    <button data-tab="budget">記帳</button>
+  </nav>
 
-    <main class="tab-container">
-      <!-- 行程分頁 -->
-      <section id="tab-schedule" class="tab-panel active">
-        <div id="itinerary-list"></div>
+  <main>
+    <!-- 行程 TAB -->
+    <section id="tab-schedule" data-tab-content="schedule" class="active">
+      <div class="section-title">
+        <span>每日行程卡片</span>
+        <span class="sub">景點 · 美食 · 纜車 · 導航</span>
+      </div>
+      <div id="schedule-container"></div>
+    </section>
+
+    <!-- 資訊 TAB -->
+    <section id="tab-info" data-tab-content="info">
+      <!-- 雪況 / Snow-Forecast + Open-Meteo -->
+      <section id="snow-forecast" class="info-card">
+        <h2>❄️ 雪況 & Snow-Forecast</h2>
+        <div class="info-meta">
+          以 Open-Meteo 取得藏王溫泉 3 日內預報，同時附上 Snow-Forecast 詳細頁連結。
+        </div>
+        <div id="snow-forecast-content">
+          讀取雪況中…
+        </div>
+        <a class="external-link"
+           href="https://www.snow-forecast.com/resorts/Yamagata-Zao-Onsen/6day/mid"
+           target="_blank" rel="noopener">
+          <span>🔗</span> 前往 Snow-Forecast 查看完整雪況與歷史數據
+        </a>
       </section>
 
-      <!-- 航班 / 住宿 / 雪票 / 租雪具 / 溫泉 / 山小屋 / 包車 / 緊急聯絡 / 纜車地圖 -->
-      <section id="tab-info" class="tab-panel">
-        <section class="info-section">
-          <h2>航班資訊</h2>
-          <div id="flight-info" class="info-card"></div>
-        </section>
-
-        <section class="info-section">
-          <h2>住宿資訊</h2>
-          <div id="hotel-info" class="info-card"></div>
-        </section>
-
-        <section class="info-section">
-          <h2>四日雪票（完美行）</h2>
-          <div id="pass-info" class="info-card"></div>
-        </section>
-
-        <section class="info-section">
-          <h2>雪具租借 · Rossignol Rental Station</h2>
-          <div id="rental-info" class="info-card"></div>
-        </section>
-
-        <section class="info-section">
-          <h2>藏王溫泉小抄</h2>
-          <div id="onsen-info" class="info-card"></div>
-        </section>
-
-        <section class="info-section">
-          <h2>三五郎小屋（Sangoro Hut）</h2>
-          <div id="hut-info" class="info-card"></div>
-        </section>
-
-        <section class="info-section">
-          <h2>包車資訊（機場 ⇄ 藏王溫泉）</h2>
-          <div id="charter-info" class="info-card"></div>
-        </section>
-
-        <section class="info-section">
-          <h2>緊急聯絡</h2>
-          <div id="emergency-info" class="info-card"></div>
-        </section>
-
-        <section class="info-section">
-          <h2>滑雪場纜車地圖</h2>
-          <div class="map-card">
-            <img
-              src="assets/zao-lift-map.png"
-              alt="藏王溫泉滑雪場纜車與雪道地圖"
-              class="lift-map"
-            />
-            <p class="hint">
-              建議把官方雪道地圖截圖存成 <code>assets/zao-lift-map.png</code>，
-              並同步下載到手機相簿，遇到訊號不穩時也能離線查看。
-            </p>
+      <!-- 航班 & 包車 -->
+      <section id="flight-info" class="info-card">
+        <h2>✈️ 航班 & 包車資訊</h2>
+        <div class="two-col">
+          <div>
+            <div class="subsection-title">航班資訊</div>
+            <ul class="info-list">
+              <li>去程：台灣 → 日本（仙台／山形，依實際機票為準）</li>
+              <li>回程：日本 → 台灣</li>
+              <li>提醒：入境時記得順路到「完美行免稅店」領免稅品與雪票資料。</li>
+            </ul>
           </div>
-        </section>
+          <div>
+            <div class="subsection-title">包車合約</div>
+            <ul class="info-list">
+              <li>路線：機場 ⇄ 蔵王溫泉 吉田屋</li>
+              <li>模式：往返包車（抵達日接機＋離境日送機）。</li>
+              <li>建議：抵達當天留意司機舉牌姓名、確認回程日期與集合時間。</li>
+            </ul>
+          </div>
+        </div>
       </section>
 
-      <!-- 記帳分頁 -->
-      <section id="tab-budget" class="tab-panel">
-        <section class="info-section">
-          <h2>旅費記帳</h2>
-          <form id="expense-form" class="expense-form">
-            <div class="form-row">
-              <label>日期</label>
-              <input type="date" id="expense-date" required />
+      <!-- 住宿：吉田屋 -->
+      <section id="hotel-info" class="info-card">
+        <h2>🏠 住宿｜吉田屋旅館 Yoshidaya Ryokan</h2>
+        <div class="info-meta">
+          郵便番号 990-2301 山形県山形市蔵王温泉13番地｜電話：023-694-9223
+        </div>
+        <p>
+          典型的日式溫泉旅館，步行約 5 分鐘可達藏王溫泉滑雪場與巴士站。館內有源泉掛流的溫泉，以及使用當季食材的會席料理。
+        </p>
+        <ul class="info-list">
+          <li><strong>入住日：</strong>1/8 起連泊</li>
+          <li><strong>行李寄送：</strong>收件日期 1/8，收件人「黃雅琳（Ya-Lin Huang）」<br>
+            地址同上（吉田屋），電話 023-694-9223。
+          </li>
+          <li><strong>小提醒：</strong>入住時可再確認宅急便是否順利送達。</li>
+        </ul>
+        <div class="card-footer" style="margin-top:8px;">
+          <a class="btn btn-primary" target="_blank" rel="noopener"
+             href="https://www.google.com/maps/search/?api=1&query=Yoshidaya+Ryokan+Zao+Onsen">
+            <span class="icon">📍</span> 打開導航到吉田屋
+          </a>
+          <span class="pill">櫃台電話：023-694-9223</span>
+        </div>
+      </section>
+
+      <!-- 票券：完美行雪票＋樹冰優先票 -->
+      <section id="tickets-info" class="info-card">
+        <h2>🎫 雪票 & 樹冰纜車優先搭乘</h2>
+        <div class="subsection-title">完美行 四日纜車雪票</div>
+        <ul class="info-list">
+          <li>已於完美行平台事先購買 4 日滑雪纜車票。</li>
+          <li>使用日預計安排：滑 2・休 1・滑 2（例如 1/9、1/10、1/12、1/13）。</li>
+          <li>建議將 QR code / 兌換憑證另存一份離線截圖。</li>
+        </ul>
+
+        <div class="subsection-title">
+          樹冰纜車 優先搭乘票（Priority Boarding Ticket）
+        </div>
+        <ul class="info-list">
+          <li>適用區間：<strong>山麓站 → 樹冰高原站</strong> 上山方向。</li>
+          <li>功能：設有「優先搭乘通道」，旺季時可大幅縮短排隊時間。</li>
+          <li>限制：票上的時間為<strong>參考時間</strong>，不保證準時搭乘，若人潮或天候異常，優先通道可能暫停。</li>
+          <li>建議：選擇安排「看樹冰的當天」購買，並預留彈性時間上山。</li>
+        </ul>
+        <div class="card-footer">
+          <a class="btn btn-primary" target="_blank" rel="noopener"
+             href="https://zaoropeway.co.jp/winter/ticket_en.php">
+            <span class="icon">⚡️</span> ZAO Ropeway 優先票預約頁
+          </a>
+          <a class="btn btn-ghost" target="_blank" rel="noopener"
+             href="https://zaoropeway.co.jp/winter/en.php">
+            <span class="icon">🚡</span> 纜車營運資訊（冬季）
+          </a>
+        </div>
+      </section>
+
+      <!-- 藏王溫泉 & 三五郎小屋 & Rossignol -->
+      <section id="zao-onsen-info" class="info-card">
+        <h2>♨️ 藏王溫泉 & 雪場小抄</h2>
+        <p>
+          藏王溫泉位於海拔約 880 m 的火山溫泉區，泉質酸性強、帶硫磺味，被稱為「美人之湯」；冬季則以
+          Juhyō 樹冰（雪怪）聞名，是滑雪與泡湯的雙重樂園。
+        </p>
+        <div class="subsection-title">三五郎小屋（Sangoro / Forest inn. SANGORO）</div>
+        <ul class="info-list">
+          <li>位置：約在中腹滑雪區，鄰近林間雪道，是滑到累了的中繼休息點。</li>
+          <li>氣氛：木造山屋，有餐飲與休息空間，很適合當「樹冰森林裡的咖啡店」。</li>
+        </ul>
+        <div class="card-footer">
+          <a class="btn" target="_blank" rel="noopener"
+             href="https://www.google.com/maps/search/?api=1&query=Sangoro+Onsen+Lodge+Zao+Onsen">
+            <span class="icon">🏠</span> 導航：三五郎小屋
+          </a>
+        </div>
+
+        <div class="subsection-title">ROSSIGNOL RENTAL STATION（雪具出租）</div>
+        <ul class="info-list">
+          <li>位置：藏王溫泉滑雪場「中央纜車站口旁」，租完即可直上雪道。</li>
+          <li>特色：全館提供 Rossignol 全套裝備，亦有雪鞋健行與雪橇出租。</li>
+          <li>建議：第一天滑雪前提前 30–45 分鐘到現場辦理，以免排隊延誤上課或上山。 </li>
+        </ul>
+        <div class="card-footer">
+          <a class="btn btn-primary" target="_blank" rel="noopener"
+             href="https://maps.app.goo.gl/WZNJ9rCxh6GkUKrA8">
+            <span class="icon">📍</span> 導航：Rossignol Rental Station
+          </a>
+          <span class="pill">可事先下載官方 App 完成會員註冊</span>
+        </div>
+      </section>
+
+      <!-- 纜車地圖 -->
+      <section class="info-card image-card">
+        <h2>🗺️ 藏王滑雪場纜車地圖</h2>
+        <div class="info-meta">建議截圖存到手機相簿，滑到哪裡都能隨時打開確認位置。</div>
+        <img src="assets/zao-lift-map.png" alt="蔵王溫泉滑雪場纜車與雪道地圖" />
+      </section>
+
+      <!-- Day3 山形市區美食 & 景點攻略 -->
+      <section id="day3-city-guide" class="info-card">
+        <h2>🏙️ Day3 山形市區 · 美食與散步口袋名單</h2>
+        <p style="margin-top:2px;">
+          滑雪日之間，給腿一個休假，也給胃一個舞台。以下整理車站周邊「<strong>輕鬆吃 · 好好逛 · 慢慢拍</strong>」的口袋店與景點。
+        </p>
+
+        <div class="subsection-title">
+          午餐候選｜車站周邊
+          <span class="sub">搭巴士到山形站後，先吃再出發</span>
+        </div>
+        <div id="day3-food-list"></div>
+
+        <div class="subsection-title" style="margin-top:8px;">
+          下午咖啡 & 甜點
+          <span class="sub">找一間喜歡的店，整理照片寫旅程</span>
+        </div>
+        <div id="day3-cafe-list"></div>
+
+        <div class="subsection-title" style="margin-top:8px;">
+          晚餐 & 在地酒場
+          <span class="sub">郷土料理 × 山形牛 × 地酒</span>
+        </div>
+        <div id="day3-dinner-list"></div>
+
+        <div class="subsection-title" style="margin-top:8px;">
+          散步景點
+          <span class="sub">城跡、公園、紅磚老建築、商店街</span>
+        </div>
+        <div id="day3-spot-list"></div>
+      </section>
+
+      <!-- 緊急聯絡 / 小備忘 -->
+      <section class="info-card">
+        <h2>📞 緊急聯絡 & 零碎備忘</h2>
+        <ul class="info-list">
+          <li><strong>日本警察：</strong>110</li>
+          <li><strong>救護／消防：</strong>119</li>
+          <li><strong>吉田屋旅館：</strong>023-694-9223</li>
+          <li><strong>當地計程車公司（例）：</strong>023-694-9611（實際以當地公告為準）</li>
+        </ul>
+        <p style="margin-top:6px; font-size:11px; color:var(--text-muted);">
+          建議抵達後，將旅館電話與日本緊急電話寫在紙本小卡，放在外套口袋，以防手機沒電或收訊不良時仍能求助。
+        </p>
+      </section>
+    </section>
+
+    <!-- 記帳 TAB -->
+    <section id="tab-budget" data-tab-content="budget">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">旅行記帳 / 預算紀錄</div>
+            <div class="card-subtitle">離線可用 · 本機儲存 · 簡單記下每一筆在雪上的花</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form id="budget-form" class="budget-form">
+            <div class="budget-form-row">
+              <input type="text" id="budget-name" placeholder="項目，例如：Rossignol 租板、山形晚餐" />
             </div>
-            <div class="form-row">
-              <label>類別</label>
-              <select id="expense-category">
+            <div class="budget-form-row">
+              <input type="number" id="budget-amount" placeholder="金額（JPY 或 TWD）" inputmode="decimal" />
+              <select id="budget-category">
                 <option value="交通">交通</option>
-                <option value="住宿">住宿</option>
                 <option value="餐飲">餐飲</option>
-                <option value="滑雪">滑雪</option>
-                <option value="伴手禮">伴手禮</option>
+                <option value="雪票 / 教練">雪票 / 教練</option>
+                <option value="租借 / 裝備">租借 / 裝備</option>
+                <option value="住宿">住宿</option>
+                <option value="購物 / 伴手禮">購物 / 伴手禮</option>
                 <option value="其他">其他</option>
               </select>
             </div>
-            <div class="form-row">
-              <label>說明</label>
-              <input
-                type="text"
-                id="expense-note"
-                placeholder="例如：纜車券 / 晚餐燒肉"
-              />
-            </div>
-            <div class="form-row">
-              <label>金額 (¥)</label>
-              <input
-                type="number"
-                id="expense-amount"
-                min="0"
-                step="1"
-                required
-              />
-            </div>
-            <button type="submit" class="primary-btn">新增記帳</button>
+            <button type="submit" class="btn btn-primary">
+              <span class="icon">➕</span> 新增記帳
+            </button>
           </form>
 
-          <div class="expense-summary">
-            <h3>總計</h3>
-            <p id="expense-total">¥0</p>
+          <ul id="budget-list" class="budget-list"></ul>
+          <div id="budget-total" class="budget-total">
+            小計：<strong>0</strong>
           </div>
-
-          <div class="expense-list-wrapper">
-            <h3>記帳明細</h3>
-            <ul id="expense-list" class="expense-list"></ul>
-          </div>
-
-          <p class="hint">
-            ※ 目前使用 <strong>瀏覽器 localStorage</strong> 離線儲存。
-            之後若要改成 Firebase 同步版，再調整 <code>app.js</code>。
-          </p>
-        </section>
-      </section>
-    </main>
-  </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <script src="app.js"></script>
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("service-worker.js");
-      });
-    }
-  </script>
 </body>
 </html>

@@ -1,892 +1,715 @@
-// =========================
-// 1. 行程資料：Zao 2026
-// =========================
+// app.js
 
-const itineraryData = [
+// -----------------------------
+// 行程資料：滑 2 休 1 滑 2
+// -----------------------------
+
+const itinerary = [
   {
-    id: "d0",
-    date: "Day 0 · 2026/01/08（四）",
-    title: "台北 → 仙台 · 抵達藏王溫泉吉田屋",
-    baseLocation: "藏王溫泉",
-    weatherLocation: "Sendai Airport, Japan",
-    segments: [
+    id: "day1",
+    label: "Day 1",
+    date: "1/8",
+    title: "抵達日本 · 前往藏王溫泉 · 入住吉田屋",
+    note: "機場 → 包車上山，晚上先熟悉溫泉街與旅館動線。",
+    items: [
       {
-        type: "交通",
-        title: "BR118 台北桃園 TPE → 仙台 SDJ",
-        time: "10:15 → 14:25",
-        place: "台北桃園機場 TPE / 仙台機場 SDJ",
-        description:
-          "早上搭乘 EVA Air BR118 直飛仙台。建議起飛前再確認登機門與行李是否直掛回程。",
-        tags: [
-          { kind: "tip", label: "出發前再次檢查：護照、保險、雪具行李" }
-        ]
+        type: "transport",
+        title: "機場 → 蔵王溫泉 吉田屋（包車）",
+        time: "下午〜傍晚",
+        desc: "抵達後由包車接送，沿途留意天氣與路面狀況。上山前可先在機場便利商店補水與小點心。",
+        tags: ["交通", "包車"],
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Yoshidaya+Ryokan+Zao+Onsen"
       },
       {
-        type: "購物",
-        title: "仙台機場完美行櫃檯 · 領取免稅品",
-        time: "抵達後",
-        place: "仙台機場 完美行櫃檯",
-        description:
-          "入境後前往完美行櫃檯，領取事先訂好的免稅品，並再次確認滑雪纜車票資訊。",
-        tags: [
-          { kind: "mustbuy", label: "必領：完美行免稅品＆雪票訂單確認" },
-          { kind: "booking", label: "對照完美行訂單與護照姓名" }
-        ]
+        type: "info",
+        title: "Check-in & 行李確認",
+        time: "抵達藏王後",
+        desc: "辦理入住、確認宅急便行李是否順利送達。簡單整理房間，先找好雪具收納區與泡湯動線。",
+        tags: ["入住", "宅急便"]
       },
       {
-        type: "交通",
-        title: "包車接送：仙台機場 → 藏王溫泉 吉田屋",
-        time: "下午",
-        place: "仙台機場 → 吉田屋旅館 Yoshidaya Ryokan",
-        description:
-          "已預約機場包車直達吉田屋旅館，省去搬雪具奔波。上車前確認行李與雪具全部都在車上。",
-        tags: [{ kind: "tip", label: "上車前快速點一次行李件數" }]
-      },
-      {
-        type: "景點",
-        title: "傍晚入住吉田屋 · 溫泉街散步",
-        time: "傍晚～晚上",
-        place: "吉田屋旅館 / 藏王溫泉街",
-        description:
-          "Check-in 後先確認宅配寄來的行李是否都完好收件。晚餐前可以在溫泉街走走，試試足湯與小店。",
-        tags: [
-          { kind: "mustbuy", label: "必買伴手禮：溫泉饅頭、溫泉蛋" },
-          { kind: "tip", label: "晚餐後泡旅館溫泉，早點睡調時差" }
-        ]
+        type: "onsen",
+        title: "第一晚溫泉與早睡",
+        time: "夜間",
+        desc: "洗去搭機與移動的疲勞。留意泉質偏酸，剛開始泡可以先縮短時間、多起身休息。",
+        tags: ["溫泉", "休息"]
       }
     ]
   },
   {
-    id: "d1",
-    date: "Day 1 · 2026/01/09（五）",
-    title: "滑雪 Day 1 · 租雪具 & 認識雪場",
-    baseLocation: "藏王溫泉滑雪場",
-    weatherLocation: "Zao Onsen Ski Resort, Yamagata, Japan",
-    segments: [
+    id: "day2",
+    label: "Day 2",
+    date: "1/9",
+    title: "滑雪 Day 1 · Rossignol 租板 · 初探雪場",
+    note: "第一天以熟悉雪況與地形為主，下午視體力安排樹冰纜車。",
+    items: [
       {
-        type: "租借",
+        type: "rental",
         title: "Rossignol Rental Station 租借雪具",
         time: "早上",
-        place:
-          "ROSSIGNOL RENTAL STATION, 〒990-2301 山形県山形市蔵王温泉川前940（中央纜車站口旁）",
-        description:
-          "第一天先到 Rossignol 租借站租雪板／雪鞋／雪杖等裝備，建議提早到場比較不排隊。確認鞋子尺寸、固定器角度，試穿好再出門。",
-        tags: [
-          { kind: "tip", label: "確認租借天數與歸還時間，拍照存租借單" }
-        ]
+        desc: "提前 30–45 分鐘抵達中央纜車站旁的 Rossignol 租借店。若有教練課程，教練會協助確認裝備。",
+        tags: ["租借 / 裝備", "Rossignol"],
+        mapsUrl: "https://maps.app.goo.gl/WZNJ9rCxh6GkUKrA8"
       },
       {
-        type: "滑雪",
-        title: "完美行滑雪纜車票 · 首日啟用",
-        time: "上午",
-        place: "藏王溫泉滑雪場 山麓纜車站",
-        description:
-          "使用完美行預訂的滑雪纜車票兌換實體票券或 IC 卡，第一天以熟悉雪場動線為主。",
-        tags: [
-          { kind: "booking", label: "完美行滑雪纜車票（4 日券已購）" },
-          { kind: "tip", label: "先確認各纜車與雪道收班時間" }
-        ]
+        type: "ski",
+        title: "中央口練功 · 熟悉雪感",
+        time: "上午〜午後",
+        desc: "選適合的綠線 / 藍線反覆滑，熟悉板子與雪況。以『穩定止滑、轉向』為主，不急著挑戰太多路線。",
+        tags: ["滑雪", "練功"]
       },
       {
-        type: "滑雪",
-        title: "練習區 & 中級雪道暖身",
-        time: "白天",
-        place: "藏王溫泉滑雪場 各區",
-        description:
-          "先從較寬、坡度溫和的雪道暖身，找出順手的路線與腳感，記錄喜歡的雪道編號。",
-        tags: [{ kind: "tip", label: "用 App 記錄路線與高度差，當作旅程數據" }]
+        type: "ropeway",
+        title: "樹冰纜車（含優先搭乘票）",
+        time: "午後〜傍晚（依天氣）",
+        desc: "視天氣與視線狀況安排上山。若已購買 ZAO Ropeway 優先搭乘票，記得提早到山麓站，並預留排隊彈性。",
+        tags: ["樹冰", "纜車", "優先票"],
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Zao+Ropeway+Sanroku+Station"
       },
       {
-        type: "餐廳",
-        title: "山上餐廳午餐：簡單補給",
+        type: "onsen",
+        title: "回吉田屋泡湯 · 早睡",
+        time: "夜間",
+        desc: "滑雪第一天腿會特別有感，睡前再泡一次溫泉，伸展小腿與臀部，隔天比較不容易鐵腿。",
+        tags: ["溫泉", "恢復"]
+      }
+    ]
+  },
+  {
+    id: "day3",
+    label: "Day 3",
+    date: "1/11",
+    title: "休息日 · 山形市區散步與美食",
+    note: "滑 2 休 1：讓腿休息、順便把城市與胃好好逛一圈。",
+    items: [
+      {
+        type: "transport",
+        title: "藏王溫泉 → 山形站",
+        time: "早上",
+        desc: "搭巴士或包車下山至山形站，行李可簡單背小包，其餘物品留在吉田屋。",
+        tags: ["交通"],
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Yamagata+Station"
+      },
+      {
+        type: "food",
+        title: "午餐：そば処 三津屋（S-PAL 山形）",
         time: "中午",
-        place: "山上餐廳（例：SANGORO 等）",
-        description:
-          "第一天午餐選簡單的咖哩飯、漢堡排或烏龍麵，重點是暖和跟補充熱量。",
-        tags: [{ kind: "food", label: "必點：熱咖哩飯 / 烏龍麵" }]
+        desc: "車站直結的在地蕎麥麵名店，招牌是山形名物冷肉蕎麥（冷たい肉そば），很適合當作城市小旅行的起點。",
+        tags: ["必吃", "午餐", "蕎麥麵"],
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=%E4%B8%89%E6%B4%A5%E5%B1%8B%20%E3%82%A8%E3%82%B9%E3%83%91%E3%83%AB%E5%B1%B1%E5%BD%A2%E5%BA%97"
       },
       {
-        type: "景點",
-        title: "回吉田屋泡湯 · 早睡養腳",
+        type: "spot",
+        title: "霞城公園（山形城跡）散步",
+        time: "午後",
+        desc: "沿著護城河與石牆散步，感受雪地城跡的安靜。若有開放館舍，也可順道參觀鄉土館或博物館。",
+        tags: ["散步", "城跡", "景點"],
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Kajo+Park+Yamagata"
+      },
+      {
+        type: "spot",
+        title: "文翔館 · 七日町商店街",
+        time: "午後〜傍晚",
+        desc: "紅磚老縣廳、鐘樓、大階梯都很上鏡，之後再一路走到七日町商店街與御殿堰，找一間喜歡的咖啡或小店坐下。",
+        tags: ["建築", "街道", "拍照"],
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bunshokan+Yamagata"
+      },
+      {
+        type: "food",
+        title: "晚餐：山形長屋酒場 或 其他郷土居酒屋",
         time: "晚上",
-        place: "吉田屋旅館 Yoshidaya Ryokan",
-        description:
-          "滑完第一天讓身體先適應雪場節奏，泡露天溫泉放鬆腿跟下背，早睡讓隔天續航力更好。",
-        tags: [{ kind: "tip", label: "泡湯前後記得補水，避免高山脫水" }]
+        desc: "一次把芋煮鍋、山形牛、小菜與地酒吃好吃滿。建議事先預約座位。",
+        tags: ["晚餐", "郷土料理", "地酒", "必吃"],
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Yamagata+Nagaya+Sakaba"
+      },
+      {
+        type: "transport",
+        title: "山形站 → 藏王溫泉（回吉田屋）",
+        time: "夜間",
+        desc: "搭巴士或預約計程車回藏王溫泉，睡前簡單伸展與早睡，準備迎接後半段滑雪。",
+        tags: ["交通", "返回"]
       }
     ]
   },
   {
-    id: "d2",
-    date: "Day 2 · 2026/01/10（六）",
-    title: "滑雪 Day 2 · 樹冰區探路",
-    baseLocation: "藏王樹冰原",
-    weatherLocation: "Zao Onsen Ski Resort, Yamagata, Japan",
-    segments: [
+    id: "day4",
+    label: "Day 4",
+    date: "1/12",
+    title: "滑雪 Day 2 · 長線路線與樹冰景觀",
+    note: "腿重新充電後，可以安排較長的路線與樹冰側拍。",
+    items: [
       {
-        type: "景點",
-        title: "搭纜車上樹冰原 · 看雪怪",
+        type: "ski",
+        title: "長線巡迴 · 串接不同區域",
         time: "上午",
-        place: "藏王纜車 山麓站 → 山頂站",
-        description:
-          "利用完美行纜車票一路搭上樹冰原，觀賞被風雪雕刻成雪怪的樹冰。如有夜樹冰行程，可順便勘路。",
-        tags: [{ kind: "tip", label: "山頂風強，記得護目鏡、面罩與頸套" }]
+        desc: "依照前兩天的熟悉程度，選擇安全但風景好的路線，慢慢串接滑過不同區域。",
+        tags: ["滑雪", "路線探索"]
       },
       {
-        type: "滑雪",
-        title: "長距離雪道巡禮",
-        time: "白天",
-        place: "樹冰原連通雪道",
-        description:
-          "挑視野好的長距離雪道，邊滑邊看風景。遇到白茫或能見度差時，降低速度、安全為優先。",
-        tags: [{ kind: "tip", label: "拍照前確認後方是否有人滑過來" }]
+        type: "ropeway",
+        title: "樹冰纜車第二回合（視天氣）",
+        time: "午後",
+        desc: "若前一次天候不佳，可利用這天再安排一次樹冰纜車。持優先票仍需預留排隊時間，避免壓縮下山與泡湯時段。",
+        tags: ["樹冰", "纜車", "優先票"],
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Zao+Ropeway+Sanroku+Station"
       },
       {
-        type: "餐廳",
-        title: "山形芋煮鍋 · 暖胃午餐",
-        time: "中午",
-        place: "山上或山麓餐廳",
-        description:
-          "試試山形名物芋煮鍋，以芋頭、牛肉與蔬菜慢燉，滑雪日吃這個非常療癒。",
-        tags: [
-          { kind: "food", label: "必吃：山形芋煮鍋" },
-          { kind: "food", label: "必點：芋煮鍋 + 白飯" }
-        ]
+        type: "spot",
+        title: "三五郎小屋 · 中途休息",
+        time: "滑雪中段",
+        desc: "在山中的小屋喝杯熱飲、吃點輕食，整理一下今天的路線與雪況觀察。",
+        tags: ["山屋", "中繼休息"],
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sangoro+Onsen+Lodge+Zao+Onsen"
       },
       {
-        type: "景點",
-        title: "傍晚小逛溫泉街 · 補貨零食飲料",
-        time: "晚上",
-        place: "藏王溫泉街",
-        description:
-          "補一些隔天滑雪可以帶的餅乾、巧克力、運動飲料，順便再踩幾個足湯點。",
-        tags: [{ kind: "mustbuy", label: "必買：在地零食 + 熱飲" }]
+        type: "onsen",
+        title: "晚間溫泉 & 行程檢討",
+        time: "夜間",
+        desc: "回吉田屋泡湯、寫下今天覺得最順的轉向與最想再滑一次的那條線。",
+        tags: ["溫泉", "紀錄"]
       }
     ]
   },
   {
-    id: "d3",
-    date: "Day 3 · 2026/01/11（日）",
-    title: "休息日 · 山形市區慢遊",
-    baseLocation: "山形市區",
-    weatherLocation: "Yamagata, Japan",
-    segments: [
+    id: "day5",
+    label: "Day 5",
+    date: "1/13",
+    title: "滑雪 Day 3 · 收官 · 回程前最後一滑",
+    note: "選最喜歡的雪道多滑幾趟，收集最滿意的一組照片。",
+    items: [
       {
-        type: "交通",
-        title: "藏王溫泉 → 山形市區",
-        time: "上午",
-        place: "藏王溫泉巴士總站 → 山形駅周邊",
-        description:
-          "滑兩天後讓身體休息，從藏王溫泉搭巴士或包車下山前往山形市區，車程不長，讓腿和核心暫時放假。",
-        tags: [{ kind: "tip", label: "提前查好回程巴士末班車時間" }]
+        type: "ski",
+        title: "最愛雪道回放日",
+        time: "全天",
+        desc: "挑選這幾天最喜歡、最有成就感又安全的路線反覆滑，專心享受雪感與速度感。",
+        tags: ["滑雪", "收官"]
       },
       {
-        type: "景點",
-        title: "山形市區散步 · 咖啡店 / 書店",
-        time: "白天",
-        place: "山形駅周邊商圈",
-        description:
-          "在山形駅附近找一間喜歡的咖啡店坐著放空，整理這兩天的滑雪照片，或逛逛書店、文具店，當成給身體的緩衝日。",
-        tags: [{ kind: "mustbuy", label: "必買：在地點心、咖啡豆、小文具" }]
+        type: "info",
+        title: "雪板歸還 · 裝備檢查",
+        time: "下午",
+        desc: "確認板面、固定器與鞋子沒有遺失物品，歸還 Rossignol 租借的裝備。",
+        tags: ["租借 / 裝備", "歸還"],
+        mapsUrl: "https://maps.app.goo.gl/WZNJ9rCxh6GkUKrA8"
       },
       {
-        type: "餐廳",
-        title: "午晚餐：山形在地料理",
-        time: "午餐 / 晚餐",
-        place: "山形市區居酒屋 / 在地食堂",
-        description:
-          "可以找家使用山形牛或當地蔬菜的食堂、居酒屋，好好吃一餐非雪場的正常食物，補充鐵質和蔬菜。",
-        tags: [
-          { kind: "food", label: "必吃：山形牛料理 / 在地居酒屋小菜" }
-        ]
-      },
-      {
-        type: "交通",
-        title: "山形市區 → 藏王溫泉 · 回吉田屋",
-        time: "傍晚～晚上",
-        place: "山形駅 → 藏王溫泉 吉田屋旅館",
-        description:
-          "傍晚搭巴士或包車回到藏王溫泉，泡個溫泉、做點輕柔伸展，讓身體把疲勞排掉，準備迎接後面兩天的滑雪。",
-        tags: [
-          { kind: "tip", label: "回程路上留意路況與積雪，提早出發比較安心" }
-        ]
-      }
-    ]
-  },
-  {
-    id: "d4",
-    date: "Day 4 · 2026/01/12（一）",
-    title: "滑雪 Day 3 · 技巧練習日",
-    baseLocation: "藏王溫泉滑雪場",
-    weatherLocation: "Zao Onsen Ski Resort, Yamagata, Japan",
-    segments: [
-      {
-        type: "滑雪",
-        title: "指定雪道技巧練習",
-        time: "白天",
-        place: "藏王溫泉滑雪場 中級雪道",
-        description:
-          "挑 1～2 條喜歡的雪道專心練習轉彎與速度控制，也可以拍幾段影片回看姿勢。",
-        tags: [
-          { kind: "tip", label: "設定今天的練習重點：例如前腳壓板 / 側滑控制" }
-        ]
-      },
-      {
-        type: "餐廳",
-        title: "山上快餐 · 不花太多時間",
-        time: "中午",
-        place: "山上餐廳",
-        description:
-          "以飯、麵等主食為主，吃飽但不要過撐，下午繼續滑。",
-        tags: [{ kind: "food", label: "必點：快速上桌的定食 / 丼飯" }]
-      },
-      {
-        type: "景點",
-        title: "若有安排夜樹冰 · 夜間纜車",
-        time: "晚上（選配）",
-        place: "樹冰夜間觀賞纜車",
-        description:
-          "如果有透過完美行或旅館安排夜樹冰行程，晚上可以搭纜車上山，在燈光下看一整片雪怪。",
-        tags: [
-          {
-            kind: "booking",
-            label: "重要預約：樹冰夜間觀賞行程（需提前預約）"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: "d5",
-    date: "Day 5 · 2026/01/13（二）",
-    title: "滑雪 Day 4 · Last Run & 打包日",
-    baseLocation: "藏王溫泉滑雪場",
-    weatherLocation: "Zao Onsen Ski Resort, Yamagata, Japan",
-    segments: [
-      {
-        type: "滑雪",
-        title: "早晨 Last Run 儀式感",
-        time: "上午",
-        place: "最喜歡的雪道",
-        description:
-          "選一條最喜歡、最有紀念感的雪道，來一趟儀式感的 Last Run，把這次藏王的滑雪記在肌肉記憶裡。",
-        tags: [{ kind: "tip", label: "請人幫忙拍一小段影片留念" }]
-      },
-      {
-        type: "滑雪",
-        title: "中午前收板 · 還板 / 整理裝備",
-        time: "中午前後",
-        place: "租板店 / 吉田屋",
-        description:
-          "確認租借裝備是否完整歸還，自己的板則檢查是否有受傷、固定器是否鎖好。回房整理雪衣、手套等裝備，準備打包。",
-        tags: [
-          { kind: "tip", label: "將隔天上飛機會用到的物品另外打包在手提" }
-        ]
-      },
-      {
-        type: "餐廳",
-        title: "最後一晚溫泉旅館晚餐",
-        time: "晚上",
-        place: "吉田屋旅館 Yoshidaya Ryokan",
-        description:
-          "好好享受這次旅程最後一晚的會席料理與溫泉，寫個簡短小結或感謝日記，當作這趟滑雪的句點。",
-        tags: [{ kind: "mustbuy", label: "再確認伴手禮是否都買齊" }]
-      }
-    ]
-  },
-  {
-    id: "d6",
-    date: "Day 6 · 2026/01/14（三）",
-    title: "退房 · 仙台機場 · BR117 回台北",
-    baseLocation: "藏王溫泉 → 仙台機場",
-    weatherLocation: "Sendai Airport, Japan",
-    segments: [
-      {
-        type: "交通",
-        title: "退房＆包車：吉田屋 → 仙台機場",
-        time: "早上～下午",
-        place: "吉田屋旅館 → 仙台機場 SDJ",
-        description:
-          "確認房間沒有遺漏物品，包含充電器、護照、雪具。搭乘預約好的包車前往仙台機場，預留足夠時間辦理退稅與托運。",
-        tags: [
-          { kind: "tip", label: "再檢查一次完美行免稅品與伴手禮是否都在" }
-        ]
-      },
-      {
-        type: "交通",
-        title: "BR117 仙台 SDJ → 台北桃園 TPE",
-        time: "16:15 → 19:30",
-        place: "仙台機場 SDJ / 台北桃園機場 TPE",
-        description:
-          "搭乘 EVA Air BR117 直飛回台北。回程途中整理照片，寫下一兩個這趟旅程最有記憶點的瞬間。",
-        tags: [{ kind: "tip", label: "抵達後注意雪板托運輸送帶位置" }]
+        type: "onsen",
+        title: "最後一晚泡湯 & 整理行李",
+        time: "夜間",
+        desc: "打包行李、確認機票與包車時間，留一點時間好好告別這次的雪季。",
+        tags: ["溫泉", "打包"]
       }
     ]
   }
 ];
 
-// 航班資訊
-const flightInfo = {
-  depart: {
-    from: "台北桃園 TPE",
-    to: "仙台 SDJ",
-    code: "BR 118（EVA AIR）",
-    time: "2026/01/08（四） 10:15 → 14:25 · 直飛"
+// -----------------------------
+// Day3 山形市區：美食 & 景點資料
+// -----------------------------
+
+const day3Food = [
+  {
+    name: "そば処 三津屋（エスパル山形店）",
+    type: "午餐 · 蕎麥麵",
+    rating: "3.47（Tabelog）",
+    must: ["冷たい肉そば（冷肉蕎麥）"],
+    note: "山形駅直結 S-PAL 1 樓的人氣蕎麥麵店，蕎麥香氣濃、湯頭偏甜，很適合作為山形市區散步前的第一餐。",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=%E4%B8%89%E6%B4%A5%E5%B1%8B%20%E3%82%A8%E3%82%B9%E3%83%91%E3%83%AB%E5%B1%B1%E5%BD%A2%E5%BA%97",
+    tags: ["必吃美食", "山形蕎麥", "車站直結"]
   },
-  return: {
-    from: "仙台 SDJ",
-    to: "台北桃園 TPE",
-    code: "BR 117（EVA AIR）",
-    time: "2026/01/14（三） 16:15 → 19:30 · 直飛"
+  {
+    name: "山形牛ステーキ / 焼肉 店（候選）",
+    type: "午 / 晚餐 · 山形牛",
+    rating: "3.4x 左右（Tabelog，依實際選店）",
+    must: ["山形牛ステーキ", "山形牛焼肉"],
+    note: "若想把『山形牛』安排在山形市區，可挑車站周邊評價約 3.4〜3.5 的山形牛專門店，作為這趟旅程的肉肉主場。",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Yamagata+beef+restaurant+near+Yamagata+Station",
+    tags: ["山形牛", "主菜", "肉食派"]
+  }
+];
+
+const day3Cafe = [
+  {
+    name: "蔵オビハチ（蔵オビハチ / クラ オビハチ）",
+    type: "古民家咖啡",
+    rating: "3.2x（Tabelog）",
+    must: ["本日のランチ", "咖啡或甜點"],
+    note: "由老倉庫改裝的木質系咖啡店，有一點昭和感，適合帶著筆電或手帳，在這裡慢慢寫這趟旅程的滑雪心得。",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=%E8%94%B5%E3%82%AA%E3%83%93%E3%83%8F%E3%83%81",
+    tags: ["老屋咖啡", "寫日記", "慢活"]
   },
-  memo:
-    "已預約機場 ⇄ 藏王溫泉吉田屋包車接送。抵達仙台後記得到完美行櫃檯領取免稅品並確認滑雪纜車票。建議將完美行訂單截圖存到手機與雲端。"
-};
+  {
+    name: "Brasserie & Bar La Gare（Hotel Metropolitan 山形）",
+    type: "車站直結咖啡 / 西餐",
+    rating: "3.3x（Tabelog）",
+    must: ["甜點套餐", "咖啡 / 紅茶"],
+    note: "位在山形站直結飯店一樓，適合作為抵達市區後的暖身咖啡館，或回藏王前最後一個悠閒角落。",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Brasserie+La+Gare+Yamagata",
+    tags: ["飯店咖啡", "車站直結"]
+  }
+];
 
-// 住宿資訊
-const hotelInfo = {
-  name: "吉田屋旅館 Yoshidaya Ryokan",
-  nights: "6 晚（2026/01/08 入住 ～ 2026/01/14 退房）",
-  address:
-    "〒990-2301 山形県山形市蔵王温泉13番地\n電話：023-694-9223",
-  checkin: "2026/01/08（四） 15:00 之後",
-  checkout: "2026/01/14（三） 10:00 前",
-  bookingId:
-    "行李宅配收件資訊：\n收件日期：1/8\n收件人：黃雅琳（Ya-Lin Huang）\n旅館：Yoshidaya Ryokan, Zao Onsen\n地址：〒990-2301 山形県山形市蔵王温泉13番地\n電話：023-694-9223"
-};
-
-// 纜車四日券（完美行購入）
-const liftPassInfo = {
-  name: "藏王溫泉滑雪場 4 日纜車雪票",
-  provider: "完美行平台（事先線上購入）",
-  pickupPlace: "蔵王ロープウェイ 山麓駅（Zao Ropeway Sanroku Station）",
-  notes:
-    "第一個滑雪日（1/9）上午於山麓站憑護照 + 完美行 QR Code 兌換票券或 IC 卡，四日票可依行程彈性安排：滑 2 休 1 滑 2。票券通常不可改期／退票，請務必確認使用日期。"
-};
-
-// 雪具租借 Rossignol Rental Station
-const rentalInfo = {
-  name: "ROSSIGNOL RENTAL STATION 藏王",
-  address: "日本 〒990-2301 山形県山形市蔵王温泉川前940（中央纜車站口旁）",
-  tel: "+81-23-694-9168",
-  placeForNav:
-    "ROSSIGNOL RENTAL STATION, 〒990-2301 山形県山形市蔵王温泉川前940",
-  notes:
-    "全館提供 Rossignol 全套滑雪／單板裝備，店鋪就在藏王溫泉滑雪場中央纜車站口旁，租完馬上上雪道。旺季建議提早到場以免排隊，確認租借天數與歸還時間。"
-};
-
-// 藏王溫泉資訊（溫泉街 + 公共浴場）
-const onsenInfo = {
-  areaName: "藏王溫泉（Zao Onsen）",
-  address: "〒990-2301 山形県山形市蔵王温泉一帶",
-  highlights: [
-    "強酸性硫磺泉，對肌肉疲勞、關節痠痛與皮膚非常友善。",
-    "三大共同浴場：上湯（Kamiyu）、川原湯（Kawarayu）、下湯（Shimoyu），費用便宜，多為簡易設備。",
-    "另有大露天風呂與多家日歸溫泉設施，可和旅館內風呂交替泡。"
-  ],
-  tips:
-    "公共浴場多為無提供洗髮精、沐浴乳的『純泡湯』形式，建議在旅館先洗淨身體再去泡。泡完湯的衣物會殘留硫磺味，適合穿易清洗或不怕味道的衣物外出。"
-};
-
-// 三五郎小屋（Forest Inn Sangoro / さんごろう山小屋）
-const hutInfo = {
-  name: "Forest Inn SANGORO（三五郎小屋）",
-  address: "藏王溫泉 中央高原 三五郎雪道內",
-  placeForNav: "Forest Inn SANGORO, Zao Onsen, Yamagata",
-  tel: "+81-23-694-9330",
-  notes:
-    "位在中央高原三五郎雪道上的山小屋與住宿設施，天氣好時露台景色極佳。中午可在此用餐，常見餐點有咖哩飯、焗飯等，座位熱門，建議避開正午人潮。"
-};
-
-// 包車資訊（機場 ⇄ 藏王溫泉）
-const charterInfo = {
-  departAirline: "長榮航空 BR118 桃園 → 仙台（10:15 → 14:25）",
-  returnAirline: "長榮航空 BR117 仙台 → 桃園（16:15 → 19:30）",
-  day1: {
-    date: "1/8",
-    note:
-      "抵達仙台機場後，由預約包車公司接駁前往藏王溫泉各旅館（含吉田屋）。飛機抵達後至出關＋取行李通常需預留 60–90 分鐘。包車合約一般以航班抵達時間為基準，有超時費用條款，盡量不要在機場逗留太久。"
+const day3Dinner = [
+  {
+    name: "山形長屋酒場",
+    type: "郷土料理 × 居酒屋",
+    rating: "3.4x（Tabelog）",
+    must: ["芋煮鍋", "山形牛料理", "地酒"],
+    note: "距山形站步行約 3 分鐘，一次把山形縣的芋煮鍋、在地小菜與地酒全部排開，店內還有花笠舞表演，是很適合當這趟旅程中場慶功的地方。",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Yamagata+Nagaya+Sakaba",
+    tags: ["必吃美食", "地酒", "晚餐重點"]
   },
-  day9: {
-    date: "1/14",
-    note:
-      "早上從各旅館開始逐點接人，約 14:00 左右由吉田屋出發前往仙台機場，預計於 16:00 左右抵達辦理 BR117 劃位與托運。"
+  {
+    name: "其他郷土居酒屋（備選）",
+    type: "郷土料理 · 安靜聊天型",
+    rating: "3.3〜3.5（Tabelog）",
+    must: ["山形牛", "當地小菜", "清酒"],
+    note: "若當晚比較想安靜聊天，可選十日町或香澄町一帶評價不錯的郷土居酒屋，氣氛通常較長屋酒場安靜。",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Yamagata+izakaya+local+food",
+    tags: ["郷土料理", "聊天氛圍"]
+  }
+];
+
+const day3Spots = [
+  {
+    name: "霞城公園（山形城跡）",
+    type: "公園 · 城跡",
+    must: ["護城河步道", "石牆與城門"],
+    note: "昔日山形城的遺跡改建而成的公園，冬天城牆與護城河邊的雪景很漂亮，是城市散步的經典路線。",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Kajo+Park+Yamagata",
+    tags: ["散步景點", "歷史", "拍照"]
   },
-  stops: [
-    {
-      name: "美好環界 藏王溫泉營業所",
-      address: "〒990-2301 山形県山形市蔵王温泉字上ノ代758番7",
-      tel: "0236-76-8190"
-    },
-    {
-      name: "高宮保険酒店",
-      address: "〒990-2301 山形県山形市蔵王温泉上ノ代94-1",
-      tel: "+81-23-610-9602"
-    },
-    {
-      name: "吉田屋旅館 Yoshidaya Ryokan",
-      address: "〒990-2301 山形県山形市蔵王温泉13",
-      tel: "+81-23-694-9223"
+  {
+    name: "文翔館（山形縣舊廳舍及議事堂）",
+    type: "紅磚歷史建築",
+    must: ["大階梯", "鐘樓", "免費入館"],
+    note: "英國近代復興風磚建築，內部免費參觀，紅磚外牆與大階梯都非常適合拍照。",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bunshokan+Yamagata",
+    tags: ["建築迷", "免費入館", "IG 景點"]
+  },
+  {
+    name: "七日町商店街 & 御殿堰",
+    type: "商店街 · 小店散步",
+    must: ["御殿堰水路", "小店巡禮"],
+    note: "結合老水路與新商店的區域，有雜貨、咖啡與小餐廳，很適合慢慢晃、慢慢選一間看得順眼的店坐下。",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Nanokamachi+Yamagata",
+    tags: ["巷弄風景", "咖啡散步"]
+  },
+  {
+    name: "S-PAL 山形 & 伴手禮樓層",
+    type: "車站百貨 · 伴手禮",
+    must: ["櫻桃甜點", "だだちゃ豆點心"],
+    note: "山形站直結商場，一樓與樓上有許多在地土產與甜點，很適合在回藏王前一次把伴手禮掃完。",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=S-PAL+Yamagata",
+    tags: ["必買伴手禮", "車站直結"]
+  }
+];
+
+// -----------------------------
+// 雪況 & 天氣（Open-Meteo）
+// -----------------------------
+
+async function loadWeatherAndSnow() {
+  const lat = 38.1801;   // Zao Onsen 附近座標
+  const lon = 140.3279;
+
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,snowfall_sum,wind_speed_10m_max&timezone=auto`;
+
+  const banner = document.getElementById("today-banner");
+  const bannerTempSpan = banner.querySelector(".temp");
+  const bannerSnowSpan = document.getElementById("today-banner-snow");
+  const bannerNoteSpan = document.getElementById("today-banner-note");
+  const snowBox = document.getElementById("snow-forecast-content");
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data.daily || !data.daily.time || data.daily.time.length === 0) {
+      throw new Error("no daily weather");
     }
-  ]
-};
 
-// 緊急聯絡
-const emergencyInfo = [
-  {
-    label: "日本緊急電話",
-    value: "110（警察） / 119（消防・救護）"
-  },
-  {
-    label: "台灣駐日代表處（東京）",
-    value: "+81-3-3280-7811"
-  },
-  {
-    label: "吉田屋旅館",
-    value: "023-694-9223"
-  },
-  {
-    label: "包車／旅行社窗口",
-    value: "請依包車合約上的聯絡人電話填入"
-  }
-];
+    const d = data.daily;
+    const todayMax = d.temperature_2m_max[0];
+    const todayMin = d.temperature_2m_min[0];
+    const todaySnow = d.snowfall_sum[0];
+    const todayWind = d.wind_speed_10m_max[0];
 
-// =========================
-// 2. 共用：導航
-// =========================
+    bannerTempSpan.textContent = `${Math.round(todayMax)}° / ${Math.round(todayMin)}°C`;
+    bannerSnowSpan.textContent = `今日預估新雪：約 ${todaySnow.toFixed(1)} cm`;
+    bannerNoteSpan.textContent = `最大風速：約 ${Math.round(todayWind)} km/h`;
 
-function openNav(place) {
-  const url =
-    "https://www.google.com/maps/search/?api=1&query=" +
-    encodeURIComponent(place);
-  window.open(url, "_blank");
-}
+    let html = "";
+    const daysToShow = Math.min(3, d.time.length);
+    for (let i = 0; i < daysToShow; i++) {
+      const dateStr = d.time[i]; // ISO yyyy-mm-dd
+      const dateObj = new Date(dateStr + "T00:00:00");
+      const label = i === 0 ? "今天" : i === 1 ? "明天" : "後天";
+      const maxT = d.temperature_2m_max[i];
+      const minT = d.temperature_2m_min[i];
+      const snow = d.snowfall_sum[i];
+      const wind = d.wind_speed_10m_max[i];
 
-// =========================
-// 3. UI 初始化
-// =========================
+      html += `
+        <div class="snow-row">
+          <strong>${label}</strong>（${dateObj.getMonth() + 1}/${dateObj.getDate()}）：
+          新雪 ${snow.toFixed(1)} cm ｜ ${Math.round(maxT)}° / ${Math.round(minT)}°C ｜ 風 ${Math.round(wind)} km/h
+        </div>
+      `;
+    }
 
-document.addEventListener("DOMContentLoaded", () => {
-  setupTabs();
-  renderItinerary();
-  renderInfo();
-  setupBudget();
-  fetchTodayWeather();
-});
-
-function setupTabs() {
-  const buttons = document.querySelectorAll(".tab-btn");
-  const panels = {
-    schedule: document.getElementById("tab-schedule"),
-    info: document.getElementById("tab-info"),
-    budget: document.getElementById("tab-budget")
-  };
-
-  buttons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      buttons.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      Object.values(panels).forEach((p) => p.classList.remove("active"));
-      panels[btn.dataset.tab].classList.add("active");
-    });
-  });
-}
-
-function renderItinerary() {
-  const container = document.getElementById("itinerary-list");
-  container.innerHTML = "";
-
-  itineraryData.forEach((day) => {
-    const dayCard = document.createElement("article");
-    dayCard.className = "day-card";
-
-    const header = document.createElement("div");
-    header.className = "day-header";
-    header.innerHTML = `
-      <div>
-        <h2>${day.date}</h2>
-        <span>${day.title}</span>
+    html += `
+      <div style="margin-top:6px; font-size:11px; color:#9ca3af;">
+        數據來源：Open-Meteo 預報（每日更新），詳細雪況可點上方連結前往 Snow-Forecast。
       </div>
     `;
+
+    snowBox.innerHTML = html;
+  } catch (e) {
+    bannerTempSpan.textContent = "天氣讀取失敗";
+    bannerSnowSpan.textContent = "新雪：-- cm";
+    bannerNoteSpan.textContent = "請確認網路連線後重試。";
+    snowBox.textContent = "目前無法取得雪況資訊，稍後再試一次。";
+  }
+}
+
+// -----------------------------
+// 行程卡片渲染
+// -----------------------------
+
+function createTag(label, kind) {
+  const span = document.createElement("span");
+  span.className = "tag" + (kind ? " " + kind : "");
+  span.textContent = label;
+  return span;
+}
+
+function renderSchedule() {
+  const container = document.getElementById("schedule-container");
+  container.innerHTML = "";
+
+  itinerary.forEach((day) => {
+    const dayCard = document.createElement("div");
+    dayCard.className = "card";
+
+    const header = document.createElement("div");
+    header.className = "card-header";
+
+    const left = document.createElement("div");
+    const title = document.createElement("div");
+    title.className = "card-title";
+    title.textContent = `${day.label}｜${day.title}`;
+    const subtitle = document.createElement("div");
+    subtitle.className = "card-subtitle";
+    subtitle.textContent = `${day.date} · ${day.note || ""}`;
+    left.appendChild(title);
+    left.appendChild(subtitle);
+
+    header.appendChild(left);
+
+    const right = document.createElement("div");
+    const pill = document.createElement("div");
+    pill.className = "pill";
+    pill.innerHTML = `<strong>${day.items.length}</strong> 個行程卡片`;
+    right.appendChild(pill);
+    header.appendChild(right);
+
     dayCard.appendChild(header);
 
-    const weatherEl = document.createElement("div");
-    weatherEl.className = "day-weather";
-    weatherEl.dataset.weatherLocation = day.weatherLocation;
-    weatherEl.textContent = "天氣資訊載入中…";
-    dayCard.appendChild(weatherEl);
+    // 每個 item 一張子卡
+    day.items.forEach((item) => {
+      const sub = document.createElement("div");
+      sub.className = "card";
+      sub.style.marginTop = "8px";
+      sub.style.background = "rgba(15,23,42,0.9)";
+      sub.style.boxShadow = "none";
 
-    const segList = document.createElement("div");
-    segList.className = "segment-list";
+      const sHeader = document.createElement("div");
+      sHeader.className = "card-header";
 
-    day.segments.forEach((seg) => {
-      const segCard = document.createElement("div");
-      segCard.className = "segment-card";
+      const sLeft = document.createElement("div");
+      const sTitle = document.createElement("div");
+      sTitle.className = "card-title";
+      sTitle.textContent = item.title;
+      const sSub = document.createElement("div");
+      sSub.className = "card-subtitle";
+      sSub.textContent = item.time || "";
+      sLeft.appendChild(sTitle);
+      sLeft.appendChild(sSub);
+      sHeader.appendChild(sLeft);
 
-      const segHeader = document.createElement("div");
-      segHeader.className = "segment-header";
-      segHeader.innerHTML = `
-        <div>
-          <div class="segment-title">${seg.title}</div>
-          <div class="segment-time">${seg.time} · ${seg.place}</div>
-        </div>
-        <div class="segment-type">${seg.type}</div>
-      `;
-      segCard.appendChild(segHeader);
-
-      const segBody = document.createElement("div");
-      segBody.className = "segment-body";
-      segBody.textContent = seg.description;
-      segCard.appendChild(segBody);
-
-      if (seg.place) {
-        const navBtn = document.createElement("button");
-        navBtn.className = "nav-button";
-        navBtn.innerHTML = `<span>📍</span> 導航`;
-        navBtn.addEventListener("click", () => openNav(seg.place));
-        segCard.appendChild(navBtn);
+      const sRight = document.createElement("div");
+      if (item.type) {
+        const t = document.createElement("div");
+        t.className = "pill";
+        t.textContent = item.type;
+        sRight.appendChild(t);
       }
+      sHeader.appendChild(sRight);
 
-      if (seg.tags && seg.tags.length > 0) {
-        const tagRow = document.createElement("div");
-        tagRow.className = "tag-row";
-        seg.tags.forEach((t) => {
-          const tag = document.createElement("span");
-          tag.className = "tag " + tagClass(t.kind);
-          tag.textContent = t.label;
-          tagRow.appendChild(tag);
+      sub.appendChild(sHeader);
+
+      const body = document.createElement("div");
+      body.className = "card-body";
+      body.textContent = item.desc || "";
+      sub.appendChild(body);
+
+      if (item.tags && item.tags.length > 0) {
+        const tagsWrap = document.createElement("div");
+        tagsWrap.className = "card-tags";
+
+        item.tags.forEach((t) => {
+          let kind = "";
+          if (t.includes("必吃")) kind = "must";
+          else if (t.includes("必買")) kind = "buy";
+          else if (t.includes("優先票") || t.includes("雪票")) kind = "book";
+          else kind = "info";
+          tagsWrap.appendChild(createTag(t, kind));
         });
-        segCard.appendChild(tagRow);
+
+        sub.appendChild(tagsWrap);
       }
 
-      segList.appendChild(segCard);
+      const footer = document.createElement("div");
+      footer.className = "card-footer";
+
+      if (item.mapsUrl) {
+        const navBtn = document.createElement("a");
+        navBtn.href = item.mapsUrl;
+        navBtn.target = "_blank";
+        navBtn.rel = "noopener";
+        navBtn.className = "btn btn-primary";
+        navBtn.innerHTML = `<span class="icon">📍</span> 導航`;
+        footer.appendChild(navBtn);
+      }
+
+      const infoPill = document.createElement("span");
+      infoPill.className = "pill";
+      infoPill.textContent = "可以依當天體力與雪況彈性調整時間。";
+      footer.appendChild(infoPill);
+
+      sub.appendChild(footer);
+
+      dayCard.appendChild(sub);
     });
 
-    dayCard.appendChild(segList);
     container.appendChild(dayCard);
   });
 }
 
-function tagClass(kind) {
-  switch (kind) {
-    case "food":
-      return "tag-food";
-    case "mustbuy":
-      return "tag-mustbuy";
-    case "booking":
-      return "tag-booking";
-    case "tip":
-    default:
-      return "tag-tip";
-  }
-}
+// -----------------------------
+// Day3 山形市區：渲染迷你卡片
+// -----------------------------
 
-// 航班 / 住宿 / 雪票 / 租雪具 / 溫泉 / 山小屋 / 包車 / 緊急聯絡
+function renderMiniList(list, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = "";
 
-function renderInfo() {
-  // 航班
-  const flightEl = document.getElementById("flight-info");
-  flightEl.innerHTML = `
-    <div class="info-row">
-      <div>
-        <div class="info-label">去程</div>
-        <div class="info-value">${flightInfo.depart.from} → ${
-    flightInfo.depart.to
-  }</div>
-      </div>
-      <div class="info-value">${flightInfo.depart.code}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">時間</div>
-      <div class="info-value">${flightInfo.depart.time}</div>
-    </div>
-    <hr style="border-color: rgba(55,65,81,0.5); border-style: dashed; margin: 0.4rem 0;" />
-    <div class="info-row">
-      <div>
-        <div class="info-label">回程</div>
-        <div class="info-value">${flightInfo.return.from} → ${
-    flightInfo.return.to
-  }</div>
-      </div>
-      <div class="info-value">${flightInfo.return.code}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">時間</div>
-      <div class="info-value">${flightInfo.return.time}</div>
-    </div>
-    <p class="hint">${flightInfo.memo}</p>
-  `;
+  list.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "mini-card";
 
-  // 住宿
-  const hotelEl = document.getElementById("hotel-info");
-  hotelEl.innerHTML = `
-    <div class="info-row">
-      <div class="info-label">住宿名稱</div>
-      <div class="info-value">${hotelInfo.name}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">入住晚數</div>
-      <div class="info-value">${hotelInfo.nights}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">地址</div>
-      <div class="info-value" style="white-space: pre-line;">${hotelInfo.address}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">Check-in</div>
-      <div class="info-value">${hotelInfo.checkin}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">Check-out</div>
-      <div class="info-value">${hotelInfo.checkout}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">預約 / 宅配資訊</div>
-      <div class="info-value" style="white-space: pre-line;">${hotelInfo.bookingId}</div>
-    </div>
-  `;
+    const header = document.createElement("div");
+    header.className = "mini-card-header";
 
-  // 四日雪票
-  const passEl = document.getElementById("pass-info");
-  passEl.innerHTML = `
-    <div class="info-row">
-      <div class="info-label">票種</div>
-      <div class="info-value">${liftPassInfo.name}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">購買平台</div>
-      <div class="info-value">${liftPassInfo.provider}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">取票地點</div>
-      <div class="info-value">${liftPassInfo.pickupPlace}</div>
-    </div>
-    <p class="hint">${liftPassInfo.notes}</p>
-  `;
+    const title = document.createElement("div");
+    title.className = "mini-card-title";
+    title.textContent = item.name;
 
-  // 租雪具
-  const rentalEl = document.getElementById("rental-info");
-  rentalEl.innerHTML = `
-    <div class="info-row">
-      <div class="info-label">店名</div>
-      <div class="info-value">${rentalInfo.name}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">地址</div>
-      <div class="info-value">${rentalInfo.address}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">電話</div>
-      <div class="info-value">${rentalInfo.tel}</div>
-    </div>
-    <button class="nav-button" onclick="openNav('${rentalInfo.placeForNav.replace(
-      /'/g,
-      "\\'"
-    )}')">
-      <span>📍</span> 導航到租借店
-    </button>
-    <p class="hint">${rentalInfo.notes}</p>
-  `;
+    const rating = document.createElement("div");
+    rating.className = "mini-card-rating";
+    rating.textContent = item.rating || "";
 
-  // 藏王溫泉
-  const onsenEl = document.getElementById("onsen-info");
-  onsenEl.innerHTML = `
-    <div class="info-row">
-      <div class="info-label">溫泉區</div>
-      <div class="info-value">${onsenInfo.areaName}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">地址</div>
-      <div class="info-value">${onsenInfo.address}</div>
-    </div>
-    <button class="nav-button" onclick="openNav('${onsenInfo.areaName}')">
-      <span>♨️</span> 導航到溫泉街
-    </button>
-    <ul class="hint" style="margin-top:0.4rem; padding-left:1.1rem;">
-      ${onsenInfo.highlights.map((h) => `<li>${h}</li>`).join("")}
-    </ul>
-    <p class="hint">${onsenInfo.tips}</p>
-  `;
+    header.appendChild(title);
+    header.appendChild(rating);
+    card.appendChild(header);
 
-  // 三五郎小屋
-  const hutEl = document.getElementById("hut-info");
-  hutEl.innerHTML = `
-    <div class="info-row">
-      <div class="info-label">名稱</div>
-      <div class="info-value">${hutInfo.name}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">位置</div>
-      <div class="info-value">${hutInfo.address}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">電話</div>
-      <div class="info-value">${hutInfo.tel}</div>
-    </div>
-    <button class="nav-button" onclick="openNav('${hutInfo.placeForNav}')">
-      <span>🏔️</span> 導航到三五郎小屋
-    </button>
-    <p class="hint">${hutInfo.notes}</p>
-  `;
+    const body = document.createElement("div");
+    body.className = "mini-card-body";
+    body.textContent = `${item.type}｜${item.note}`;
+    card.appendChild(body);
 
-  // 包車
-  const charterEl = document.getElementById("charter-info");
-  charterEl.innerHTML = `
-    <div class="info-row">
-      <div class="info-label">去程航班</div>
-      <div class="info-value">${charterInfo.departAirline}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">回程航班</div>
-      <div class="info-value">${charterInfo.returnAirline}</div>
-    </div>
-    <p class="hint"><strong>1/8</strong>：${charterInfo.day1.note}</p>
-    <p class="hint"><strong>1/14</strong>：${charterInfo.day9.note}</p>
-    <hr style="border-color: rgba(55,65,81,0.5); border-style: dashed; margin: 0.4rem 0;" />
-    ${charterInfo.stops
-      .map(
-        (s) => `
-      <div class="info-row">
-        <div class="info-label">${s.name}</div>
-        <div class="info-value">
-          ${s.address}<br />
-          TEL：${s.tel}
-        </div>
-      </div>
-    `
-      )
-      .join("")}
-  `;
+    if (item.must && item.must.length > 0) {
+      const tagsWrap = document.createElement("div");
+      tagsWrap.className = "mini-card-tags";
 
-  // 緊急聯絡
-  const emergencyEl = document.getElementById("emergency-info");
-  emergencyEl.innerHTML = emergencyInfo
-    .map(
-      (item) => `
-    <div class="info-row">
-      <div class="info-label">${item.label}</div>
-      <div class="info-value">${item.value}</div>
-    </div>
-  `
-    )
-    .join("");
-}
+      item.must.forEach((m) => {
+        const tag = createTag(`必點：${m}`, "must");
+        tagsWrap.appendChild(tag);
+      });
 
-// =========================
-// 4. 天氣（API Key 可之後再補）
-// =========================
+      if (item.tags && item.tags.length > 0) {
+        item.tags.forEach((t) => {
+          const tag = createTag(t, "info");
+          tagsWrap.appendChild(tag);
+        });
+      }
 
-const OPEN_WEATHER_API_KEY = "REPLACE_WITH_YOUR_KEY";
-const OPEN_WEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
-
-async function fetchTodayWeather() {
-  try {
-    const todayWeatherEl = document.getElementById("today-weather");
-    const loc = itineraryData[0]?.weatherLocation || "Zao Onsen, Yamagata";
-    const data = await fetchWeather(loc);
-    if (!data) {
-      todayWeatherEl.textContent =
-        "天氣 API 尚未設定 Key，先以當地預報為主。";
-      document
-        .querySelectorAll(".day-weather")
-        .forEach((el) => (el.textContent = "天氣：可之後接上 API 顯示"));
-      return;
+      card.appendChild(tagsWrap);
     }
-    const temp = Math.round(data.main.temp);
-    const cond = data.weather[0]?.description ?? "";
-    todayWeatherEl.innerHTML = `
-      <div class="weather-main">
-        <strong>${loc}</strong>
-        <span>· ${cond}</span>
-      </div>
-      <div><strong>${temp}°C</strong></div>
-    `;
-    document
-      .querySelectorAll(".day-weather")
-      .forEach(
-        (el) => (el.innerHTML = `天氣：<strong>${temp}°C</strong> · ${cond}`)
-      );
-  } catch (e) {
-    console.error(e);
-  }
-}
 
-async function fetchWeather(location) {
-  if (!OPEN_WEATHER_API_KEY || OPEN_WEATHER_API_KEY.startsWith("REPLACE")) {
-    return null;
-  }
-  const params = new URLSearchParams({
-    q: location,
-    appid: OPEN_WEATHER_API_KEY,
-    units: "metric",
-    lang: "zh_tw"
-  });
-  const res = await fetch(`${OPEN_WEATHER_BASE_URL}?${params.toString()}`);
-  if (!res.ok) return null;
-  return await res.json();
-}
+    const footer = document.createElement("div");
+    footer.className = "mini-card-footer";
 
-// =========================
-// 5. 記帳（localStorage）
-// =========================
+    if (item.mapsUrl) {
+      const btn = document.createElement("a");
+      btn.href = item.mapsUrl;
+      btn.target = "_blank";
+      btn.rel = "noopener";
+      btn.className = "btn";
+      btn.innerHTML = `<span class="icon">📍</span> 導航`;
+      footer.appendChild(btn);
+    }
 
-const STORAGE_KEY = "zao-trip-expenses";
+    card.appendChild(footer);
 
-function setupBudget() {
-  const form = document.getElementById("expense-form");
-  const listEl = document.getElementById("expense-list");
-  const totalEl = document.getElementById("expense-total");
-
-  const expenses = loadExpenses();
-
-  function render() {
-    listEl.innerHTML = "";
-    let total = 0;
-    expenses.forEach((e) => {
-      total += e.amount;
-      const li = document.createElement("li");
-      li.className = "expense-item";
-      li.innerHTML = `
-        <div>
-          <div>${e.category} · ¥${e.amount}</div>
-          <div class="expense-meta">${e.date} · ${e.note || ""}</div>
-        </div>
-      `;
-      listEl.appendChild(li);
-    });
-    totalEl.textContent = `¥${total.toLocaleString("ja-JP")}`;
-  }
-
-  render();
-
-  form.addEventListener("submit", (evt) => {
-    evt.preventDefault();
-    const date = document.getElementById("expense-date").value;
-    const category = document.getElementById("expense-category").value;
-    const note = document.getElementById("expense-note").value.trim();
-    const amount = Number(
-      document.getElementById("expense-amount").value || "0"
-    );
-    if (!date || !amount) return;
-
-    expenses.push({ date, category, note, amount });
-    saveExpenses(expenses);
-    form.reset();
-    render();
+    container.appendChild(card);
   });
 }
 
-function loadExpenses() {
+function renderDay3CityGuide() {
+  renderMiniList(day3Food, "day3-food-list");
+  renderMiniList(day3Cafe, "day3-cafe-list");
+  renderMiniList(day3Dinner, "day3-dinner-list");
+  renderMiniList(day3Spots, "day3-spot-list");
+}
+
+// -----------------------------
+// 記帳功能（本機儲存）
+// -----------------------------
+
+const BUDGET_STORAGE_KEY = "zao_trip_budget_v1";
+
+function loadBudgetFromStorage() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(BUDGET_STORAGE_KEY);
     if (!raw) return [];
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed;
   } catch {
     return [];
   }
 }
 
-function saveExpenses(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+function saveBudgetToStorage(items) {
+  try {
+    localStorage.setItem(BUDGET_STORAGE_KEY, JSON.stringify(items));
+  } catch {
+    // ignore
+  }
 }
+
+let budgetItems = loadBudgetFromStorage();
+
+function renderBudget() {
+  const list = document.getElementById("budget-list");
+  const totalEl = document.getElementById("budget-total");
+  list.innerHTML = "";
+
+  let total = 0;
+
+  budgetItems.forEach((item, idx) => {
+    const li = document.createElement("li");
+    li.className = "budget-item";
+
+    const main = document.createElement("div");
+    main.className = "budget-item-main";
+
+    const title = document.createElement("div");
+    title.className = "budget-item-title";
+    title.textContent = item.name || "(未命名)";
+
+    const meta = document.createElement("div");
+    meta.className = "budget-item-meta";
+    meta.textContent = `${item.category || "未分類"} ｜ ${item.amount}`;
+
+    main.appendChild(title);
+    main.appendChild(meta);
+
+    const button = document.createElement("button");
+    button.className = "btn btn-ghost";
+    button.type = "button";
+    button.textContent = "刪除";
+    button.onclick = () => {
+      budgetItems.splice(idx, 1);
+      saveBudgetToStorage(budgetItems);
+      renderBudget();
+    };
+
+    li.appendChild(main);
+    li.appendChild(button);
+    list.appendChild(li);
+
+    const num = parseFloat(item.amount);
+    if (!isNaN(num)) total += num;
+  });
+
+  totalEl.innerHTML = `小計：<strong>${total.toLocaleString()}</strong>`;
+}
+
+// -----------------------------
+// TAB 切換
+// -----------------------------
+
+function setupTabs() {
+  const buttons = document.querySelectorAll("nav.tab-nav button");
+  const sections = document.querySelectorAll("section[data-tab-content]");
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const tab = btn.getAttribute("data-tab");
+      buttons.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      sections.forEach((sec) => {
+        if (sec.getAttribute("data-tab-content") === tab) {
+          sec.classList.add("active");
+        } else {
+          sec.classList.remove("active");
+        }
+      });
+    });
+  });
+}
+
+// -----------------------------
+// 初始化
+// -----------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+  setupTabs();
+  renderSchedule();
+  renderDay3CityGuide();
+  renderBudget();
+  loadWeatherAndSnow();
+
+  const form = document.getElementById("budget-form");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const nameInput = document.getElementById("budget-name");
+    const amountInput = document.getElementById("budget-amount");
+    const categorySelect = document.getElementById("budget-category");
+
+    const name = nameInput.value.trim();
+    const amount = amountInput.value.trim();
+    const category = categorySelect.value;
+
+    if (!amount) {
+      alert("請至少輸入金額。");
+      return;
+    }
+
+    budgetItems.push({
+      name,
+      amount,
+      category
+    });
+
+    saveBudgetToStorage(budgetItems);
+    renderBudget();
+
+    nameInput.value = "";
+    amountInput.value = "";
+  });
+});
