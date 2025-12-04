@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="theme-color" content="#0f172a" />
 
-  <!-- PWA 基本設定（沿用你原本的 manifest / icon 即可） -->
+  <!-- PWA 基本設定 -->
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
 
@@ -536,7 +536,8 @@
     </div>
     <div id="today-banner" class="today-banner">
       <div class="today-banner-main">
-        <span>今天的藏王天氣 / 雪況</span>
+        <!-- 清楚標明：這裡是「中腹 1220m 概略預報」 -->
+        <span>今天的藏王天氣 / 雪況（中腹 1220m 概略預報）</span>
         <span class="temp">載入中…</span>
       </div>
       <div class="today-banner-sub">
@@ -545,7 +546,7 @@
       </div>
       <div class="today-banner-link">
         <a href="https://www.snow-forecast.com/resorts/Yamagata-Zao-Onsen/6day/mid" target="_blank" rel="noopener">
-          打開 Snow-Forecast 看完整預報 →
+          打開 Snow-Forecast（三高度詳細圖） →
         </a>
       </div>
     </div>
@@ -571,17 +572,45 @@
     <section id="tab-info" data-tab-content="info">
       <!-- 雪況 / Snow-Forecast + Open-Meteo -->
       <section id="snow-forecast" class="info-card">
-        <h2>❄️ 雪況 & Snow-Forecast</h2>
+        <h2>❄️ 雪況 · 怎麼用這張卡做決策</h2>
         <div class="info-meta">
-          以 Open-Meteo 取得藏王溫泉 3 日內預報，同時附上 Snow-Forecast 詳細頁連結。
+          這裡顯示的是 <strong>「中腹 1220m」的 3 日概略預報（Open-Meteo 模擬）</strong>，
+          方便妳一打開小工具就知道：今天大概是「冷 / 暖、風大 / 小、有沒有新雪」。
+          <br>
+          真正要決定「衝不衝山頂、樹冰要不要今天看」，請以
+          <strong>Snow-Forecast 的三個高度圖（山麓 / 中腹 / 山頂）為準</strong>。
         </div>
+
+        <ul class="info-list">
+          <li><strong>Step 1 · 看這張卡：</strong>先抓一個「中腹」的大致感覺：有沒有新雪？風會不會很大？</li>
+          <li><strong>Step 2 · 打開 Snow-Forecast：</strong>分別看 780 / 1220 / 1661m 的降雪、溫度、風速、freezing level。</li>
+          <li><strong>Step 3 · 決策範例：</strong>
+            <ul>
+              <li>山頂風 &gt; 15 m/s：樹冰區可能體感很差、纜車也可能停駛 → 以中腹滑行為主。</li>
+              <li>山麓 +5°C 下雨，但山頂仍在零度以下：上面可能還是雪，開車上山要特別留意結冰路段。</li>
+              <li>中腹一整天幾乎沒新雪、氣溫很低：雪可能偏硬，適合練技術，但要注意摔倒風險。</li>
+            </ul>
+          </li>
+        </ul>
+
         <div id="snow-forecast-content">
-          讀取雪況中…
+          讀取中腹 1220m 概略預報中…
         </div>
+
+        <a class="external-link"
+           href="https://www.snow-forecast.com/resorts/Yamagata-Zao-Onsen/6day/top"
+           target="_blank" rel="noopener">
+          <span>🚡</span> 山頂 1661m 圖表（看樹冰區風 &amp; 能見度）
+        </a>
         <a class="external-link"
            href="https://www.snow-forecast.com/resorts/Yamagata-Zao-Onsen/6day/mid"
            target="_blank" rel="noopener">
-          <span>🔗</span> 前往 Snow-Forecast 查看完整雪況與歷史數據
+          <span>⛷️</span> 中腹 1220m 圖表（實際滑行感受接近）
+        </a>
+        <a class="external-link"
+           href="https://www.snow-forecast.com/resorts/Yamagata-Zao-Onsen/6day/low"
+           target="_blank" rel="noopener">
+          <span>🚗</span> 山麓 780m 圖表（溫泉街 &amp; 上山路況）
         </a>
       </section>
 
@@ -687,7 +716,7 @@
         <ul class="info-list">
           <li>位置：藏王溫泉滑雪場「中央纜車站口旁」，租完即可直上雪道。</li>
           <li>特色：全館提供 Rossignol 全套裝備，亦有雪鞋健行與雪橇出租。</li>
-          <li>建議：第一天滑雪前提前 30–45 分鐘到現場辦理，以免排隊延誤上課或上山。 </li>
+          <li>建議：第一天滑雪前提前 30–45 分鐘到現場辦理，以免排隊延誤上課或上山。</li>
         </ul>
         <div class="card-footer">
           <a class="btn btn-primary" target="_blank" rel="noopener"

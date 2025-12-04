@@ -94,7 +94,7 @@ const itinerary = [
         type: "food",
         title: "午餐：そば処 三津屋（S-PAL 山形）",
         time: "中午",
-        desc: "車站直結的在地蕎麥麵名店，招牌是山形名物冷肉蕎麥（冷たい肉そば），很適合當作城市小旅行的起點。",
+        desc: "車站直結的在地蕎麥麵名店，招牌是山形名物冷肉蕎麥（冷たい肉そば），很適合作為城市小旅行的起點。",
         tags: ["必吃", "午餐", "蕎麥麵"],
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=%E4%B8%89%E6%B4%A5%E5%B1%8B%20%E3%82%A8%E3%82%B9%E3%83%91%E3%83%AB%E5%B1%B1%E5%BD%A2%E5%BA%97"
       },
@@ -307,13 +307,13 @@ const day3Spots = [
 
 // -----------------------------
 // 雪況 & 天氣（Open-Meteo）
+// 中腹 1220m 概略預報
 // -----------------------------
 
 async function loadWeatherAndSnow() {
-  const lat = 38.1801;   // Zao Onsen 附近座標
+  const lat = 38.1801; // Zao Onsen 附近
   const lon = 140.3279;
-
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,snowfall_sum,wind_speed_10m_max&timezone=auto`;
+  const elevation = 1220; // 中腹概略高度
 
   const banner = document.getElementById("today-banner");
   const bannerTempSpan = banner.querySelector(".temp");
@@ -321,55 +321,76 @@ async function loadWeatherAndSnow() {
   const bannerNoteSpan = document.getElementById("today-banner-note");
   const snowBox = document.getElementById("snow-forecast-content");
 
+  const url =
+    `https://api.open-meteo.com/v1/forecast` +
+    `?latitude=${lat}&longitude=${lon}` +
+    `&elevation=${elevation}` +
+    `&daily=temperature_2m_max,temperature_2m_min,snowfall_sum,wind_speed_10m_max` +
+    `&timezone=auto`;
+
   try {
     const res = await fetch(url);
     const data = await res.json();
-
     if (!data.daily || !data.daily.time || data.daily.time.length === 0) {
       throw new Error("no daily weather");
     }
 
     const d = data.daily;
+
+    // 今天（index 0）→ banner
     const todayMax = d.temperature_2m_max[0];
     const todayMin = d.temperature_2m_min[0];
     const todaySnow = d.snowfall_sum[0];
     const todayWind = d.wind_speed_10m_max[0];
 
-    bannerTempSpan.textContent = `${Math.round(todayMax)}° / ${Math.round(todayMin)}°C`;
-    bannerSnowSpan.textContent = `今日預估新雪：約 ${todaySnow.toFixed(1)} cm`;
-    bannerNoteSpan.textContent = `最大風速：約 ${Math.round(todayWind)} km/h`;
+    bannerTempSpan.textContent = `${Math.round(todayMax)}° / ${Math.round(
+      todayMin
+    )}°C`;
+    bannerSnowSpan.textContent = `今日預估新雪：約 ${todaySnow.toFixed(
+      1
+    )} cm`;
+    bannerNoteSpan.textContent = `最大風速：約 ${Math.round(
+      todayWind
+    )} km/h`;
 
-    let html = "";
+    // 下方卡片：未來三天「中腹 1220m 概略預報」
     const daysToShow = Math.min(3, d.time.length);
+    let html = `<div class="snow-row"><strong>中腹 1220m · 3 日概略預報（Open-Meteo）</strong></div>`;
+
     for (let i = 0; i < daysToShow; i++) {
-      const dateStr = d.time[i]; // ISO yyyy-mm-dd
+      const dateStr = d.time[i];
       const dateObj = new Date(dateStr + "T00:00:00");
-      const label = i === 0 ? "今天" : i === 1 ? "明天" : "後天";
+      const label =
+        i === 0 ? "今天" : i === 1 ? "明天" : "後天";
       const maxT = d.temperature_2m_max[i];
       const minT = d.temperature_2m_min[i];
       const snow = d.snowfall_sum[i];
       const wind = d.wind_speed_10m_max[i];
 
       html += `
-        <div class="snow-row">
-          <strong>${label}</strong>（${dateObj.getMonth() + 1}/${dateObj.getDate()}）：
-          新雪 ${snow.toFixed(1)} cm ｜ ${Math.round(maxT)}° / ${Math.round(minT)}°C ｜ 風 ${Math.round(wind)} km/h
+        <div class="snow-row" style="margin-left:10px;">
+          ${label}（${dateObj.getMonth() + 1}/${dateObj.getDate()}）：
+          新雪 ${snow.toFixed(1)} cm ｜ ${Math.round(
+        maxT
+      )}° / ${Math.round(minT)}°C ｜ 風 ${Math.round(wind)} km/h
         </div>
       `;
     }
 
     html += `
       <div style="margin-top:6px; font-size:11px; color:#9ca3af;">
-        數據來源：Open-Meteo 預報（每日更新），詳細雪況可點上方連結前往 Snow-Forecast。
+        ※ 僅為中腹概略預報，實際滑雪前請再打開上方連結，查看 Snow-Forecast 的
+        山麓 / 中腹 / 山頂 三高度圖表與 freezing level。
       </div>
     `;
 
     snowBox.innerHTML = html;
   } catch (e) {
+    console.error(e);
     bannerTempSpan.textContent = "天氣讀取失敗";
     bannerSnowSpan.textContent = "新雪：-- cm";
     bannerNoteSpan.textContent = "請確認網路連線後重試。";
-    snowBox.textContent = "目前無法取得雪況資訊，稍後再試一次。";
+    snowBox.textContent = "目前無法取得概略預報，稍後再試一次。";
   }
 }
 
